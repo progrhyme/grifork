@@ -1,6 +1,6 @@
 class Derooter::Graph::Node
   include Derooter::Concerns::Configured
-  attr_accessor :level, :children, :parent, :next_sibling, :host
+  attr_accessor :level, :children, :parent, :host
 
   def initialize(host, parent: nil)
     @host     = host
@@ -10,8 +10,8 @@ class Derooter::Graph::Node
   end
 
   def add_child(child)
-    if elder = @children.last
-      elder.next_sibling = child
+    unless acceptable?
+      raise "Unacceptable!"
     end
     @children << child
     child.parent = self
@@ -21,9 +21,5 @@ class Derooter::Graph::Node
 
   def acceptable?
     children.size < config.jobs
-  end
-
-  def first_sibling
-    parent ? parent.children.first : nil
   end
 end

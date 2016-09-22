@@ -14,6 +14,10 @@ class Derooter
     @config ||= -> { Config.new }.call
   end
 
+  def self.configure!(config)
+    @config = config
+  end
+
   def config
     self.class.config
   end

@@ -1,51 +1,37 @@
 class Derooter::Graph
   include Derooter::Concerns::Configured
-  attr :root
+  attr :root, :nodes, :depth
 
-  def initialize(hosts)
-    @root = Node.new(Derooter.localhost)
+  def initialize(hosts = [])
+    @root  = Node.new(Derooter.localhost)
+    @depth = @root.level
+    @nodes = 1
+    @acceptable_nodes = [@root]
     hosts.each do |h|
       self.add_node(h.to_node)
     end
   end
 
   def add_node(node)
-    parent = search_acceptable_node(root)
+    parent = @acceptable_nodes.first
     parent.add_child(node)
+    unless parent.acceptable?
+      @acceptable_nodes.shift
+    end
+    @last   = node
+    @depth  = node.level
+    @nodes += 1
+    @acceptable_nodes << node
     parent
   end
 
   def print(node)
-    puts %(  ) * node.level + node.level.to_s
+    label = node.host.hostname
+    label ||= "level#{node.level}"
+    puts %(  ) * node.level + label
     node.children.each do |child|
       print(child)
     end
-    if node.next_sibling
-      print(node.next_sibling)
-    end
-  end
-
-  private
-
-  def search_acceptable_node(node, level: nil)
-    return node if node.acceptable?
-    level ||= node.level
-    level = 1 if level.zero?
-
-    if level <= node.level
-      if node.next_sibling
-        return search_acceptable_node(node.next_sibling, level: level)
-      end
-      return search_acceptable_node(node.first_sibling, level: node.level + 1)
-    end
-
-    node.children.each do |child|
-      return child if search_acceptable_node(child, level: level)
-    end
-    if node.next_sibling
-      return search_acceptable_node(node.next_sibling, level: level)
-    end
-
-    return search_acceptable_node(node.first_sibling, level: level + 1)
+    true
   end
 end
