@@ -63,5 +63,27 @@ describe Grifork::Graph do
         expect(@graph.root.children[0].children[0].children.size).to be 1
       end
     end
+
+    context 'When 80 nodes added' do
+      let(:node_num) { 3 + 9 + 27 + 81 }
+
+      it 'Complete 3-depth tree' do
+        expect(@graph.nodes).to be 121
+        expect(@graph.depth).to be 4
+        expect(@graph.root.children.size).to be 3
+        @graph.root.children.each do |node|
+          expect(node.children.size).to be 3
+          node.children.each do |child|
+            expect(child.children.size).to be 3
+            child.children.each do |gc|
+              expect(gc.children.size).to be 3
+              gc.children.each do |ggc|
+                expect(ggc.children.size).to be 0
+              end
+            end
+          end
+        end
+      end
+    end
   end
 end
