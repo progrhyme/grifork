@@ -1,9 +1,9 @@
-class Derooter
-  require_relative 'derooter/config'
-  require_relative 'derooter/concerns/configured'
-  require_relative 'derooter/host'
-  require_relative 'derooter/graph'
-  require_relative 'derooter/graph/node'
+class Grifork
+  require_relative 'grifork/config'
+  require_relative 'grifork/concerns/configured'
+  require_relative 'grifork/host'
+  require_relative 'grifork/graph'
+  require_relative 'grifork/graph/node'
 
   def self.run(argv)
     obj = new

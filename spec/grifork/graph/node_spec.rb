@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Derooter::Graph::Node do
+describe Grifork::Graph::Node do
   before :context do
-    Derooter.configure!(Test::FakeConfig.new(jobs: 3))
+    Grifork.configure!(Test::FakeConfig.new(jobs: 3))
   end
 
   describe '#acceptable?' do
     before :each do
-      @parent = Derooter::Graph::Node.new(Derooter::Host.new)
+      @parent = Grifork::Graph::Node.new(Grifork::Host.new)
     end
     subject { @parent.acceptable? }
 
@@ -18,7 +18,7 @@ describe Derooter::Graph::Node do
     context 'With max children' do
       before :each do
         3.times do
-          @parent.add_child(Derooter::Host.new.to_node)
+          @parent.add_child(Grifork::Host.new.to_node)
         end
       end
       it { expect(subject).to be false }

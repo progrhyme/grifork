@@ -1,9 +1,9 @@
-class Derooter::Graph
-  include Derooter::Concerns::Configured
+class Grifork::Graph
+  include Grifork::Concerns::Configured
   attr :root, :nodes, :depth
 
   def initialize(hosts = [])
-    @root  = Node.new(Derooter.localhost)
+    @root  = Node.new(Grifork.localhost)
     @depth = @root.level
     @nodes = 1
     @acceptable_nodes = [@root]

@@ -1,7 +1,7 @@
-module Derooter::Concerns
+module Grifork::Concerns
   module Configured
     def config
-      Derooter.config
+      Grifork.config
     end
   end
 end

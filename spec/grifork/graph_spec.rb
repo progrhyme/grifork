@@ -1,22 +1,22 @@
 require 'spec_helper'
 
-describe Derooter::Graph do
+describe Grifork::Graph do
   before :context do
-    Derooter.configure!(Test::FakeConfig.new(jobs: 3))
+    Grifork.configure!(Test::FakeConfig.new(jobs: 3))
   end
 
   describe '.new' do
     let(:hosts) { [] }
-    subject { Derooter::Graph.new(hosts) }
+    subject { Grifork::Graph.new(hosts) }
     it { expect(subject).to be_truthy }
   end
 
   describe '#add_node' do
     let(:node_num) { 1 }
     before :each do
-      @graph = Derooter::Graph.new
+      @graph = Grifork::Graph.new
       node_num.times do |idx|
-        @graph.add_node(Derooter::Host.new("host#{idx}").to_node)
+        @graph.add_node(Grifork::Host.new("host#{idx}").to_node)
       end
     end
 

@@ -1,5 +1,5 @@
-class Derooter::Graph::Node
-  include Derooter::Concerns::Configured
+class Grifork::Graph::Node
+  include Grifork::Concerns::Configured
   attr_accessor :level, :children, :parent, :host
 
   def initialize(host, parent: nil)
