@@ -33,10 +33,8 @@ class Grifork::Graph
   end
 
   # For debug
-  def print(node)
-    label   = node.host.hostname
-    label ||= "level#{node.level}"
-    puts %(  ) * node.level + label
+  def print(node = root)
+    puts %(  ) * node.level + "#{node.id} # #{node.index}"
     node.children.each do |child|
       print(child)
     end
