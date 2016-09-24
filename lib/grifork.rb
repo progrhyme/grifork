@@ -19,10 +19,6 @@ class Grifork
     @config = config
   end
 
-  def config
-    self.class.config
-  end
-
   def self.localhost
     @localhost ||= -> { Host.new }.call
   end
