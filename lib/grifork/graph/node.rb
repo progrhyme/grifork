@@ -2,15 +2,15 @@ class Grifork::Graph::Node
   include Grifork::Concerns::Configured
   attr :index, :level, :number, :children, :parent, :host
 
-  @num = 0
-
-  def self.add
-    @num += 1
+  module ClassMethods
+    attr :count
+    def add
+      @count ||= 0
+      @count  += 1
+    end
   end
 
-  def self.num
-    @num
-  end
+  extend ClassMethods
 
   def initialize(host, parent: nil)
     @host     = host
@@ -23,7 +23,7 @@ class Grifork::Graph::Node
       @level  = 0
       @number = 0
     end
-    @index = self.class.num
+    @index = self.class.count
     self.class.add
   end
 
