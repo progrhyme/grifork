@@ -3,9 +3,9 @@ require 'grifork'
 
 class Test
   class FakeConfig
-    attr_accessor :jobs, :hosts
-    def initialize(jobs: 4, hosts: 10)
-      @jobs = jobs
+    attr_accessor :branches, :hosts
+    def initialize(branches: 4, hosts: 10)
+      @branches = branches
       @hosts = (1..hosts).map { Grifork::Host.new }
     end
   end

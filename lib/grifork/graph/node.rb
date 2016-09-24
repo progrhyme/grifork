@@ -20,6 +20,6 @@ class Grifork::Graph::Node
   end
 
   def acceptable?
-    children.size < config.jobs
+    children.size < config.branches
   end
 end

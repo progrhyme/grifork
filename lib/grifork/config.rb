@@ -1,7 +1,7 @@
 class Grifork::Config
-  attr :jobs, :hosts
+  attr :branches, :hosts
   def initialize
-    @jobs = 4
+    @branches = 4
     @hosts = (1..100).map { |i| Grifork::Host.new("host#{i}") }
   end
 end

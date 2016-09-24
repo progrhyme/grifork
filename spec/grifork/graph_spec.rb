@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Grifork::Graph do
   before :context do
-    Grifork.configure!(Test::FakeConfig.new(jobs: 3))
+    Grifork.configure!(Test::FakeConfig.new(branches: 3))
   end
 
   describe '.new' do
