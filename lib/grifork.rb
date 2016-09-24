@@ -6,8 +6,9 @@ class Grifork
   require_relative 'grifork/graph/node'
 
   def self.run(argv)
-    obj = new
-    obj.sync_hosts
+    obj   = new
+    graph = Graph.new(config.hosts)
+    graph.run_task
   end
 
   def self.config
@@ -20,10 +21,6 @@ class Grifork
 
   def config
     self.class.config
-  end
-
-  def sync_hosts
-    graph = Graph.new(config.hosts)
   end
 
   def self.localhost

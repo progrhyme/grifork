@@ -12,6 +12,12 @@ class Grifork::Graph
     end
   end
 
+  def run_task
+    1.upto(depth).each do |level|
+      # run for each level
+    end
+  end
+
   def add_node(node)
     parent = @acceptable_nodes.first
     parent.add_child(node)
@@ -25,8 +31,9 @@ class Grifork::Graph
     parent
   end
 
+  # For debug
   def print(node)
-    label = node.host.hostname
+    label   = node.host.hostname
     label ||= "level#{node.level}"
     puts %(  ) * node.level + label
     node.children.each do |child|
