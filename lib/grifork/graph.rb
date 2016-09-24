@@ -1,5 +1,6 @@
 class Grifork::Graph
   include Grifork::Concerns::Configured
+  include Grifork::Concerns::Loggable
   attr :root, :nodes, :depth
 
   def initialize(hosts = [])
@@ -12,9 +13,20 @@ class Grifork::Graph
     end
   end
 
-  def run_task
-    1.upto(depth).each do |level|
-      # run for each level
+  def run_task(node = root)
+    #currents = [node]
+    if node.children.size.zero?
+      logger.debug("#{node} Reached leaf. Nothing to do.")
+    end
+    node.children.each do |child|
+      if node.local?
+        logger.info("Run locally. #{node} => #{child}")
+      else
+        logger.info("Run remote. #{node} => #{child}")
+      end
+    end
+    node.children.each do |child|
+      run_task(child)
     end
   end
 
@@ -34,7 +46,7 @@ class Grifork::Graph
 
   # For debug
   def print(node = root)
-    puts %(  ) * node.level + "#{node.id} # #{node.index}"
+    puts %(  ) * node.level + "#{node}"
     node.children.each do |child|
       print(child)
     end

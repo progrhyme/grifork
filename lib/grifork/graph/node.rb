@@ -23,8 +23,12 @@ class Grifork::Graph::Node
       @level  = 0
       @number = 0
     end
-    @index = self.class.count
+    @index = self.class.count || 0
     self.class.add
+  end
+
+  def to_s
+    "<#{index}:#{id}>"
   end
 
   def id
@@ -42,6 +46,10 @@ class Grifork::Graph::Node
       raise "Unacceptable!"
     end
     @children << child
+  end
+
+  def local?
+    parent ? false : true
   end
 
   def acceptable?
