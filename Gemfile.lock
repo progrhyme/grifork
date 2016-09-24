@@ -23,6 +23,7 @@ GEM
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     slop (3.6.0)
+    stdlogger (0.3.0)
 
 PLATFORMS
   ruby
@@ -31,6 +32,7 @@ DEPENDENCIES
   pry
   rake
   rspec
+  stdlogger
 
 BUNDLED WITH
    1.13.0
