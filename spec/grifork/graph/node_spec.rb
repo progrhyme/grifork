@@ -1,13 +1,17 @@
 require 'spec_helper'
 
 describe Grifork::Graph::Node do
+  def gen_node
+    Grifork::Graph::Node.new(Grifork::Host.new)
+  end
+
   before :context do
     Grifork.configure!(Test::FakeConfig.new(branches: 3))
   end
 
   describe '#acceptable?' do
     before :each do
-      @parent = Grifork::Graph::Node.new(Grifork::Host.new)
+      @parent = gen_node
     end
     subject { @parent.acceptable? }
 
@@ -18,7 +22,7 @@ describe Grifork::Graph::Node do
     context 'With max children' do
       before :each do
         3.times do
-          @parent.add_child(Grifork::Host.new.to_node)
+          @parent.add_child(gen_node)
         end
       end
       it { expect(subject).to be false }

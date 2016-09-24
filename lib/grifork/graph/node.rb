@@ -14,9 +14,6 @@ class Grifork::Graph::Node
       raise "Unacceptable!"
     end
     @children << child
-    child.parent = self
-    child.level = level + 1
-    child.children = []
   end
 
   def acceptable?

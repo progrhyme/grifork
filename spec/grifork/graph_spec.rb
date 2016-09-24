@@ -16,7 +16,7 @@ describe Grifork::Graph do
     before :each do
       @graph = Grifork::Graph.new
       node_num.times do |idx|
-        @graph.add_node(Grifork::Host.new("host#{idx}").to_node)
+        @graph.add_node_by_host(Grifork::Host.new("host#{idx}"))
       end
     end
 

@@ -4,8 +4,4 @@ class Grifork::Host
     @hostname  = hostname
     @ipaddress = ipaddress
   end
-
-  def to_node
-    Grifork::Graph::Node.new(self)
-  end
 end

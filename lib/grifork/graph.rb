@@ -7,8 +7,8 @@ class Grifork::Graph
     @depth = @root.level
     @nodes = 1
     @acceptable_nodes = [@root]
-    hosts.each do |h|
-      self.add_node(h.to_node)
+    hosts.each do |host|
+      self.add_node_by_host(host)
     end
   end
 
@@ -18,8 +18,9 @@ class Grifork::Graph
     end
   end
 
-  def add_node(node)
+  def add_node_by_host(host)
     parent = @acceptable_nodes.first
+    node   = Node.new(host, parent: parent)
     parent.add_child(node)
     unless parent.acceptable?
       @acceptable_nodes.shift
