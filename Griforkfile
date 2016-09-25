@@ -1,0 +1,14 @@
+branches 4
+log file: 'tmp/grifork.log', level: 'debug'
+
+hosts ['localhost', { hostname: 'myhost', ipaddress: '127.0.0.1' },]
+
+local do
+  sh :echo, "LOCAL: #{src.hostname} => #{dst.hostname}"
+end
+
+remote do
+  ssh src, [:echo, "REMOTE: #{src.hostname} => #{dst.hostname}"]
+end
+
+# vim:set ft=ruby :

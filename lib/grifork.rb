@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'pp' # Debug @todo Remove
 require 'stdlogger'
 
 class Grifork
@@ -9,14 +10,13 @@ class Grifork
   require_relative 'grifork/host'
   require_relative 'grifork/graph'
   require_relative 'grifork/graph/node'
+  require_relative 'grifork/task'
+  require_relative 'grifork/dsl'
+  require_relative 'grifork/runner'
+
+  DEFAULT_TASKFILE = 'Griforkfile'
 
   class << self
-    def run(argv)
-      graph = Graph.new(config.hosts)
-      graph.print # Debug
-      graph.run_task
-    end
-
     def config
       @config ||= -> { Config.new }.call
     end

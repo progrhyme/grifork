@@ -6,6 +6,6 @@ class Grifork::Config
       file:  'tmp/grifork.log',
       level: 'debug',
     ).freeze
-    @hosts = (1..100).map { |i| Grifork::Host.new("host#{i}") }
+    @hosts = (1..10).map { |i| Grifork::Host.new("host#{i}") }
   end
 end
