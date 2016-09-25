@@ -7,7 +7,7 @@ class Grifork::Runner
     Grifork.configure!(config)
     graph = Grifork::Graph.new(config.hosts)
     graph.print # Debug
-    graph.run_task
+    graph.fork_tasks
   end
 
   def load_taskfile

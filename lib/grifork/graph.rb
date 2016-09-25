@@ -13,8 +13,7 @@ class Grifork::Graph
     end
   end
 
-  def run_task(node = root)
-    #currents = [node]
+  def fork_tasks(node = root)
     if node.children.size.zero?
       logger.debug("#{node} Reached leaf. Nothing to do.")
     end
@@ -29,7 +28,7 @@ class Grifork::Graph
       end
     end
     node.children.each do |child|
-      run_task(child)
+      fork_tasks(child)
     end
   end
 
