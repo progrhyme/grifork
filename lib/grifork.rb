@@ -12,9 +12,6 @@ class Grifork
   require_relative 'grifork/graph'
   require_relative 'grifork/graph/node'
   require_relative 'grifork/task'
-  require_relative 'grifork/task/base'
-  require_relative 'grifork/task/local'
-  require_relative 'grifork/task/remote'
   require_relative 'grifork/dsl'
   require_relative 'grifork/runner'
 

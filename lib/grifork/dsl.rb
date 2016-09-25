@@ -30,11 +30,11 @@ class Grifork::DSL
   end
 
   def local(&task)
-    config_set(:local_task, Grifork::Task::Local.new(&task))
+    config_set(:local_task, Grifork::Task.new(:local, &task))
   end
 
   def remote(&task)
-    config_set(:remote_task, Grifork::Task::Remote.new(&task))
+    config_set(:remote_task, Grifork::Task.new(:remote, &task))
   end
 
   private
