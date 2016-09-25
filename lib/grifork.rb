@@ -4,9 +4,9 @@ require 'stdlogger'
 
 class Grifork
   require_relative 'grifork/config'
-  require_relative 'grifork/concerns/configured'
+  require_relative 'grifork/mixin/configured'
   require_relative 'grifork/logger'
-  require_relative 'grifork/concerns/loggable'
+  require_relative 'grifork/mixin/loggable'
   require_relative 'grifork/host'
   require_relative 'grifork/graph'
   require_relative 'grifork/graph/node'

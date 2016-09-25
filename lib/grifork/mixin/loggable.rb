@@ -1,4 +1,4 @@
-module Grifork::Concerns
+module Grifork::Mixin
   module Loggable
     def logger
       Grifork.logger

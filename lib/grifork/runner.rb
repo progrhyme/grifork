@@ -1,5 +1,5 @@
 class Grifork::Runner
-  include Grifork::Concerns::Configured
+  include Grifork::Mixin::Configured
 
   def run(argv)
     load_taskfile
