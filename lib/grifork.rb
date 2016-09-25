@@ -1,7 +1,6 @@
 require 'open3'
 require 'ostruct'
 require 'pp' # Debug @todo Remove
-require 'shellwords'
 require 'stdlogger'
 
 class Grifork
