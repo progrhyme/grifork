@@ -1,6 +1,7 @@
 require 'open3'
 require 'ostruct'
 require 'pp' # Debug @todo Remove
+require 'shellwords'
 require 'stdlogger'
 
 class Grifork
@@ -21,11 +22,8 @@ class Grifork
   DEFAULT_TASKFILE = 'Griforkfile'
 
   class << self
-    def config
-      @config ||= -> { Config.new }.call
-    end
+    attr :config
 
-    # Overwrite @config mainly for debug or testing
     def configure!(config)
       @config = config
     end
@@ -35,7 +33,9 @@ class Grifork
     end
 
     def localhost
-      @localhost ||= -> { Host.new }.call
+      @localhost ||= -> {
+        Host.new(hostname: 'localhost', ipaddress: '127.0.0.1')
+      }.call
     end
   end
 end

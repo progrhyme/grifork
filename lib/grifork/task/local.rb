@@ -1,10 +1,10 @@
 class Grifork::Task::Local < Grifork::Task::Base
   def sh(*args)
-    command = args.join(' ')
+    command = args.shelljoin
     stat = Open3.popen3(command) do |stdin, stdout, stderr, wait_thr|
       stdin.close
-      stdout.each { |l| logger.info(l) }
-      stderr.each { |l| logger.warn(l) }
+      stdout.each { |l| logger.info("[STDOUT] " + l.chomp) }
+      stderr.each { |l| logger.warn("[STDERR] " + l.chomp) }
       wait_thr.value
     end
 

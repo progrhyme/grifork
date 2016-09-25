@@ -1,4 +1,5 @@
 class Grifork::Task::Base
+  attr :src, :dst
   include Grifork::Mixin::Loggable
 
   def initialize(&task)
@@ -6,6 +7,8 @@ class Grifork::Task::Base
   end
 
   def run(src, dst)
+    @src = src
+    @dst = dst
     instance_eval(&@task)
   end
 end

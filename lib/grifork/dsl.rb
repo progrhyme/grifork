@@ -5,36 +5,44 @@ class Grifork::DSL
     content = File.binread(path)
     dsl = new
     dsl.instance_eval(content)
-    pp dsl
+    #pp dsl # Debug
     dsl
   end
 
-  def branches(num)
-    init_property(:branches, num)
+  def initialize
+    @config = {}
   end
 
-  def log(stash)
-    init_property(:log, stash)
+  def to_config
+    Grifork::Config.new(@config)
+  end
+
+  def branches(num)
+    config_set(:branches, num)
+  end
+
+  def log(args)
+    config_set(:log, Grifork::Config::Log.new(args))
   end
 
   def hosts(list)
-    init_property(:hosts, list.map { |h| Grifork::Host.new(h) })
+    config_set(:hosts, list.map { |h| Grifork::Host.new(h) })
   end
 
   def local(&task)
-    init_property(:localtask, Grifork::Task::Local.new(&task))
+    config_set(:local_task, Grifork::Task::Local.new(&task))
   end
 
   def remote(&task)
-    init_property(:remotetask, Grifork::Task::Remote.new(&task))
+    config_set(:remote_task, Grifork::Task::Remote.new(&task))
   end
 
   private
 
-  def init_property(prop, value)
-    if instance_variable_get("@#{prop}")
-      raise LoadError, %(@#{prop} is already defined!)
+  def config_set(key, value)
+    if @config[key]
+      raise LoadError, %(Config "#{key}" is already defined!)
     end
-    instance_variable_set("@#{prop}", value)
+    @config[key] = value
   end
 end

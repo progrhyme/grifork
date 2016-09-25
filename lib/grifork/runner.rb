@@ -2,14 +2,16 @@ class Grifork::Runner
   include Grifork::Mixin::Configured
 
   def run(argv)
-    load_taskfile
+    config = load_taskfile.freeze
+    #pp config # Debug
+    Grifork.configure!(config)
     graph = Grifork::Graph.new(config.hosts)
-    #graph.print # Debug
-    #graph.run_task
+    graph.print # Debug
+    graph.run_task
   end
 
   def load_taskfile
-    dsl = Grifork::DSL.load_file(taskfile)
+    Grifork::DSL.load_file(taskfile).to_config
   end
 
   private

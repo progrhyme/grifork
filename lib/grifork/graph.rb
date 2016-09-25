@@ -22,8 +22,10 @@ class Grifork::Graph
     node.children.each do |child|
       if node.local?
         logger.info("Run locally. #{node} => #{child}")
+        config.local_task.run(node.host, child.host)
       else
         logger.info("Run remote. #{node} => #{child}")
+        config.remote_task.run(node.host, child.host)
       end
     end
     node.children.each do |child|

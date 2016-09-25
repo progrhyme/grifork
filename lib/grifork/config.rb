@@ -1,11 +1,18 @@
 class Grifork::Config
-  attr :branches, :hosts, :log
-  def initialize
-    @branches = 4
-    @log = OpenStruct.new(
-      file:  'tmp/grifork.log',
-      level: 'debug',
-    ).freeze
-    @hosts = (1..10).map { |i| Grifork::Host.new("host#{i}") }
+  attr :branches, :hosts, :log, :local_task, :remote_task
+
+  def initialize(args)
+    args.each do |key, val|
+      instance_variable_set("@#{key}", val)
+    end
+  end
+
+  class Log
+    attr :file, :level
+
+    def initialize(args)
+      @file  = args[:file]
+      @level = args[:level]
+    end
   end
 end
