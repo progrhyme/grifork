@@ -1,9 +1,3 @@
-class Grifork::Task
-  def initialize(type, &task)
-    @task = task
-  end
-
-  def run(src, dst)
-    @task.call(src, dst)
-  end
+module Grifork::Task
+  class CommandFailure < StandardError; end
 end
