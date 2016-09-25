@@ -10,25 +10,28 @@ class Grifork
   require_relative 'grifork/graph'
   require_relative 'grifork/graph/node'
 
-  def self.run(argv)
-    obj   = new
-    graph = Graph.new(config.hosts)
-    graph.run_task
-  end
+  class << self
+    def run(argv)
+      graph = Graph.new(config.hosts)
+      graph.print # Debug
+      graph.run_task
+    end
 
-  def self.config
-    @config ||= -> { Config.new }.call
-  end
+    def config
+      @config ||= -> { Config.new }.call
+    end
 
-  def self.logger
-    @logger ||= -> { Grifork::Logger.create }.call
-  end
+    # Overwrite @config mainly for debug or testing
+    def configure!(config)
+      @config = config
+    end
 
-  def self.configure!(config)
-    @config = config
-  end
+    def logger
+      @logger ||= -> { Grifork::Logger.create }.call
+    end
 
-  def self.localhost
-    @localhost ||= -> { Host.new }.call
+    def localhost
+      @localhost ||= -> { Host.new }.call
+    end
   end
 end

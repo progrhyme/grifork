@@ -18,6 +18,7 @@ class Grifork::Graph
     if node.children.size.zero?
       logger.debug("#{node} Reached leaf. Nothing to do.")
     end
+    # @todo Use Parallel
     node.children.each do |child|
       if node.local?
         logger.info("Run locally. #{node} => #{child}")
