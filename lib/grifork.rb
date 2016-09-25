@@ -1,6 +1,8 @@
 require 'open3'
 require 'ostruct'
 require 'pp' # Debug @todo Remove
+require 'shellwords'
+require 'net/ssh'
 require 'stdlogger'
 
 class Grifork

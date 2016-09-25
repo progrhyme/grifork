@@ -20,10 +20,10 @@ class Grifork::Graph
     # @todo Use Parallel
     node.children.each do |child|
       if node.local?
-        logger.info("Run locally. #{node} => #{child}")
+        logger.info("Run locally. localhost => #{child.host.hostname}")
         config.local_task.run(node.host, child.host)
       else
-        logger.info("Run remote. #{node} => #{child}")
+        logger.info("Run remote [#{node.level}]. #{node.host.hostname} => #{child.host.hostname}")
         config.remote_task.run(node.host, child.host)
       end
     end

@@ -8,7 +8,7 @@ local do
 end
 
 remote do
-  ssh src, [:echo, "REMOTE: #{src.hostname} => #{dst.hostname}"]
+  ssh src, :echo, %W(REMOTE: #{src.hostname} => #{dst.hostname})
 end
 
 # vim:set ft=ruby :
