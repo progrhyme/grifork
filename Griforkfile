@@ -1,14 +1,28 @@
+# Configuration
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
 
-hosts ['localhost', { hostname: 'myhost', ipaddress: '127.0.0.1' },]
+# Define hosts as array
+hosts [
+  # (1) by resolvable hostname
+  'web1.internal', 'web2.internal',
+  # (2) by hostname and ipaddress
+  { hostname: 'db1', ipaddress: '192.168.10.1' },
+  { hostname: 'db2', ipaddress: '192.168.10.2' },
+]
 
+# Define task run on localhost
 local do
   sh :echo, %W(LOCAL: #{src.hostname} => #{dst.hostname})
+  ssh dst, :mkdir, %W(-p /path/to/dest)
+  rsync %w(/path/to/src/ /path/to/dest/)
 end
 
+# Define task run on remote hosts
 remote do
-  ssh src, :echo, %W(REMOTE: #{src.hostname} => #{dst.hostname})
+  sh :echo, %W(REMOTE: #{src.hostname} => #{dst.hostname})
+  ssh dst, :mkdir, %W(-p /path/to/dest)
+  rsync_remote %w(/path/to/src/ /path/to/dest/)
 end
 
 # vim:set ft=ruby :
