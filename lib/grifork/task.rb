@@ -42,20 +42,31 @@ class Grifork::Task
             raise SSHCommandFailure, "Failed to exec ssh command! on: #{host.hostname} command: #{cmd} #{args}"
           end
 
-          ch.on_data          { |c, d|    logger.info("#ssh [out] #{d.chomp}") }
-          ch.on_extended_data { |c, t, d| logger.warn("#ssh [err] #{d.chomp}") }
-          ch.on_close         { logger.debug("#ssh end.") }
+          ch.on_data do |c, d|
+            d.each_line { |l| logger.info("#ssh [out] #{l.chomp}") }
+          end
+          ch.on_extended_data do |c, t, d|
+            d.each_line { |l| logger.warn("#ssh [err] #{l.chomp}") }
+          end
+          ch.on_close { logger.debug("#ssh end.") }
         end
       end
       channel.wait
     end
   end
 
-  # @todo Implement rsync
-  def rsync
+  def rsync(from, to = nil)
+    to ||= from
+    sh :rsync, [*rsync_opts, from, "#{dst.hostname}:#{to}"]
   end
 
   # @todo Implement remote rsync
-  def rsync_remote
+  def rsync_remote(from, to = nil)
+    to ||= from
+    ssh src, :rsync, [*rsync_opts, from, "#{dst.hostname}:#{to}"]
+  end
+
+  def rsync_opts
+    %w(-avzc --delete)
   end
 end
