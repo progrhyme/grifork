@@ -3,6 +3,7 @@ require 'ostruct'
 require 'pp' # Debug @todo Remove
 require 'shellwords'
 require 'net/ssh'
+require 'parallel'
 require 'stdlogger'
 
 class Grifork

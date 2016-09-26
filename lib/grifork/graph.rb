@@ -17,8 +17,7 @@ class Grifork::Graph
     if node.children.size.zero?
       logger.debug("#{node} Reached leaf. Nothing to do.")
     end
-    # @todo Use Parallel
-    node.children.each do |child|
+    Parallel.map(node.children, in_threads: node.children.size) do |child|
       if node.local?
         logger.info("Run locally. localhost => #{child.host.hostname}")
         config.local_task.run(node.host, child.host)
