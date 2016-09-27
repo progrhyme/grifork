@@ -13,22 +13,44 @@ class Grifork::Graph
     end
   end
 
-  def fork_tasks(node = root)
-    if node.children.size.zero?
-      logger.debug("#{node} Reached leaf. Nothing to do.")
+  def launch_tasks
+    # level = 1
+    Parallel.map(root.children, in_threads: root.children.size) do |node|
+      logger.info("Run locally. localhost => #{node.host.hostname}")
+      config.local_task.run(root.host, node.host)
     end
-    Parallel.map(node.children, in_threads: node.children.size) do |child|
-      if node.local?
-        logger.info("Run locally. localhost => #{child.host.hostname}")
-        config.local_task.run(node.host, child.host)
-      else
-        logger.info("Run remote [#{node.level}]. #{node.host.hostname} => #{child.host.hostname}")
-        config.remote_task.run(node.host, child.host)
+    # level in (2..depth)
+    fork_remote_tasks(root.children)
+  end
+
+  # Launch remote tasks recursively
+  def fork_remote_tasks(parents)
+    families        = []
+    next_generation = []
+    parents.each do |parent|
+      if parent.children.size.zero?
+        logger.debug("#{parent} Reached leaf. Nothing to do.")
+        next
+      end
+      parent.children.each do |child|
+        families        << [parent, child]
+        next_generation << child
       end
     end
-    node.children.each do |child|
-      fork_tasks(child)
+
+    if families.size.zero?
+      logger.info("Reached bottom of the tree. Nothing to do.")
+      return
     end
+
+    Parallel.map(families, in_threads: families.size) do |family|
+      parent = family[0]
+      child  = family[1]
+      logger.info("Run remote [#{parent.level}]. #{parent.host.hostname} => #{child.host.hostname}")
+      config.remote_task.run(parent.host, child.host)
+    end
+
+    fork_remote_tasks(next_generation)
   end
 
   def add_node_by_host(host)

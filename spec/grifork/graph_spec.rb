@@ -14,15 +14,15 @@ describe Grifork::Graph do
     it { expect(subject).to be_truthy }
   end
 
-  describe '#fork_tasks' do
-    $fork_tasks_log = Pathname.new('tmp/graph_fork_tasks_spec.log')
+  describe '#launch_tasks' do
+    $launch_tasks_log = Pathname.new('tmp/graph_launch_tasks_spec.log')
     let(:config) do
       hosts      = 1.upto(10).map { |i| Grifork::Host.new("host#{i}") }
       local_task = Grifork::Task.new(:local) do
-        sh "echo LOCAL #{src.hostname}:#{dst.hostname} >> #{$fork_tasks_log}", []
+        sh "echo LOCAL #{src.hostname}:#{dst.hostname} >> #{$launch_tasks_log}", []
       end
       remote_task = Grifork::Task.new(:remote) do
-        sh "echo REMOTE #{src.hostname}:#{dst.hostname} >> #{$fork_tasks_log}", []
+        sh "echo REMOTE #{src.hostname}:#{dst.hostname} >> #{$launch_tasks_log}", []
       end
       Grifork::Config.new(
         branches:    2,
@@ -35,14 +35,14 @@ describe Grifork::Graph do
     let(:graph) { Grifork::Graph.new(config.hosts) }
 
     after do
-      File.unlink($fork_tasks_log)
+      File.unlink($launch_tasks_log)
     end
 
-    subject { graph.fork_tasks }
+    subject { graph.launch_tasks }
 
     it 'Run tasks through the whole tree' do
       expect { subject }.not_to raise_error
-      outputs = File.read($fork_tasks_log).each_line.map(&:chomp)
+      outputs = File.read($launch_tasks_log).each_line.map(&:chomp)
       expected = 1.upto(2).map { |i| "LOCAL localhost:host#{i}" }
       [[1, [3, 4]], [2, [5, 6]], [3, [7, 8]], [4, [9, 10]]].each do |list|
         j = list[0]
