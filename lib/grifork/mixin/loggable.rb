@@ -1,7 +1,5 @@
-module Grifork::Mixin
-  module Loggable
-    def logger
-      Grifork.logger
-    end
+module Grifork::Loggable
+  def logger
+    Grifork.logger
   end
 end

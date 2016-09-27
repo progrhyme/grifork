@@ -1,6 +1,6 @@
 class Grifork::Graph
-  include Grifork::Mixin::Configured
-  include Grifork::Mixin::Loggable
+  include Grifork::Configured
+  include Grifork::Loggable
   attr :root, :nodes, :depth
 
   def initialize(hosts = [])

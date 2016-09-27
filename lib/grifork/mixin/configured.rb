@@ -1,7 +1,5 @@
-module Grifork::Mixin
-  module Configured
-    def config
-      Grifork.config
-    end
+module Grifork::Configured
+  def config
+    Grifork.config
   end
 end

@@ -1,6 +1,6 @@
 class Grifork::Task
   attr :src, :dst
-  include Grifork::Mixin::Loggable
+  include Grifork::Loggable
 
   class CommandFailure < StandardError; end
   class SSHCommandFailure < StandardError; end

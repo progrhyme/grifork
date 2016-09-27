@@ -1,5 +1,5 @@
 class Grifork::Graph::Node
-  include Grifork::Mixin::Configured
+  include Grifork::Configured
   attr :index, :level, :number, :children, :parent, :host
 
   class << self
