@@ -6,7 +6,7 @@ describe Grifork::DSL do
   describe '.load_file' do
     let(:content) { nil }
     before do
-      @dsl = Tempfile.new
+      @dsl = Tempfile.new('dsl')
       File.write(@dsl.path, content)
     end
 
