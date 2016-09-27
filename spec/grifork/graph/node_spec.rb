@@ -6,7 +6,7 @@ describe Grifork::Graph::Node do
   end
 
   before :context do
-    Grifork.configure!(Test::FakeConfig.new(branches: 3))
+    Grifork.configure!(Grifork::Config.new(branches: 3))
   end
 
   describe '#acceptable?' do
