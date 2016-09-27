@@ -12,7 +12,7 @@ class Grifork::Config
 
     def initialize(args)
       @file  = args[:file]
-      @level = args[:level]
+      @level = args[:level] || 'info'
     end
   end
 end
