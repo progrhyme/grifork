@@ -13,15 +13,41 @@ class Grifork::Graph
     end
   end
 
+  def add_node_by_host(host)
+    parent = @acceptable_nodes.first
+    node   = Node.new(host, parent: parent)
+    parent.add_child(node)
+    unless parent.acceptable?
+      @acceptable_nodes.shift
+    end
+    @last   = node
+    @depth  = node.level
+    @nodes += 1
+    @acceptable_nodes << node
+    parent
+  end
+
+  # Launch local and remote tasks through whole graph
   def launch_tasks
     # level = 1
     Parallel.map(root.children, in_threads: root.children.size) do |node|
-      logger.info("Run locally. localhost => #{node.host.hostname}")
+      logger.info("Run locally. localhost => #{node.host}")
       config.local_task.run(root.host, node.host)
     end
     # level in (2..depth)
     fork_remote_tasks(root.children)
   end
+
+  # Print graph structure for debug usage
+  def print(node = root)
+    puts %(  ) * node.level + "#{node}"
+    node.children.each do |child|
+      print(child)
+    end
+    true
+  end
+
+  private
 
   # Launch remote tasks recursively
   def fork_remote_tasks(parents)
@@ -51,28 +77,5 @@ class Grifork::Graph
     end
 
     fork_remote_tasks(next_generation)
-  end
-
-  def add_node_by_host(host)
-    parent = @acceptable_nodes.first
-    node   = Node.new(host, parent: parent)
-    parent.add_child(node)
-    unless parent.acceptable?
-      @acceptable_nodes.shift
-    end
-    @last   = node
-    @depth  = node.level
-    @nodes += 1
-    @acceptable_nodes << node
-    parent
-  end
-
-  # For debug
-  def print(node = root)
-    puts %(  ) * node.level + "#{node}"
-    node.children.each do |child|
-      print(child)
-    end
-    true
   end
 end
