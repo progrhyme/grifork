@@ -1,5 +1,9 @@
 class Grifork::Launcher
   def launch(argv)
+    OptionParser.new do |opt|
+      opt.on('-f', '--file Griforkfile') { |file| @taskfile = file }
+      opt.parse!(argv)
+    end
     config = load_taskfile.freeze
     Grifork.configure!(config)
     graph = Grifork::Graph.new(config.hosts)
@@ -15,6 +19,6 @@ class Grifork::Launcher
   private
 
   def taskfile
-    ENV['GRIFORKFILE'] || Grifork::DEFAULT_TASKFILE
+    @taskfile || ENV['GRIFORKFILE'] || Grifork::DEFAULT_TASKFILE
   end
 end
