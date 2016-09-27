@@ -16,7 +16,7 @@ class Grifork
   require_relative 'grifork/graph/node'
   require_relative 'grifork/task'
   require_relative 'grifork/dsl'
-  require_relative 'grifork/runner'
+  require_relative 'grifork/launcher'
 
   DEFAULT_TASKFILE = 'Griforkfile'
 

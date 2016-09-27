@@ -2,4 +2,4 @@
 
 require_relative '../lib/grifork'
 
-Grifork::Runner.new.run(ARGV)
+Grifork::Launcher.new.launch(ARGV)

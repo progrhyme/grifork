@@ -1,5 +1,5 @@
-class Grifork::Runner
-  def run(argv)
+class Grifork::Launcher
+  def launch(argv)
     config = load_taskfile.freeze
     Grifork.configure!(config)
     graph = Grifork::Graph.new(config.hosts)
