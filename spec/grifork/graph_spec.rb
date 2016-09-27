@@ -11,7 +11,7 @@ describe Grifork::Graph do
     it { expect(subject).to be_truthy }
   end
 
-  describe '#add_node' do
+  describe '#add_node_by_host' do
     let(:node_num) { 1 }
     before :each do
       @graph = Grifork::Graph.new

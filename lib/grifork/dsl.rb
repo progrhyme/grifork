@@ -1,11 +1,11 @@
 class Grifork::DSL
   class LoadError < StandardError; end
 
+  # Load DSL file to object
   def self.load_file(path)
     content = File.binread(path)
     dsl = new
     dsl.instance_eval(content)
-    #pp dsl # Debug
     dsl
   end
 
