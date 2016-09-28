@@ -17,6 +17,13 @@ class Grifork::DSL
     Grifork::Config.new(@config)
   end
 
+  def mode(m)
+    unless Grifork::MODES.has_key?(m)
+      raise LoadError, "Undefined mode! #{m}"
+    end
+    config_set(:mode, m)
+  end
+
   def branches(num)
     config_set(:branches, num)
   end

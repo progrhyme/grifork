@@ -7,6 +7,10 @@ class Grifork::Config
     end
   end
 
+  def mode
+    @mode || :standalone
+  end
+
   class Log
     attr :file, :level
 

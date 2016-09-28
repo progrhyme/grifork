@@ -21,6 +21,11 @@ class Grifork
 
   DEFAULT_TASKFILE = 'Griforkfile'
 
+  MODES = {
+    standalone: 1,
+    grifork:    2,
+  }.freeze
+
   class << self
     attr :config
 

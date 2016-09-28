@@ -1,4 +1,6 @@
 # Configuration
+mode :standalone
+#mode :grifork
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
 
