@@ -4,7 +4,8 @@ require 'tempfile'
 
 describe Grifork::DSL do
   describe '.load_file' do
-    let(:content) { nil }
+    let(:content)   { nil   }
+    let(:on_remote) { false }
     before do
       @dsl = Tempfile.new('dsl')
       File.write(@dsl.path, content)
@@ -14,7 +15,7 @@ describe Grifork::DSL do
       File.unlink(@dsl.path)
     end
 
-    subject { Grifork::DSL.load_file(@dsl.path) }
+    subject { Grifork::DSL.load_file(@dsl.path, on_remote: on_remote) }
 
     context 'With valid DSL' do
       let(:content) do
@@ -37,6 +38,23 @@ describe Grifork::DSL do
         expect(config[:hosts].size).to eq 2
         expect(config[:local_task]).to be_truthy
         expect(config[:remote_task]).to be_truthy
+      end
+
+      context 'With on_remote: true argument' do
+        let(:on_remote) { true }
+
+        it 'Load remote task as local' do
+          expect { subject }.not_to raise_error
+          dsl = subject
+          expect(dsl).to be_an_instance_of(Grifork::DSL)
+          config = dsl.instance_variable_get('@config')
+          expect(config[:branches]).to eq 2
+          expect(config[:log]).to be_an_instance_of(Grifork::Config::Log)
+          expect(config[:hosts].size).to eq 2
+          expect(config[:remote_task]).to be nil
+          ret = config[:local_task].run(:a, :b)
+          expect(ret).to be :remote
+        end
       end
     end
 

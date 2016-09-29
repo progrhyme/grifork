@@ -2,15 +2,18 @@ class Grifork::DSL
   class LoadError < StandardError; end
 
   # Load DSL file to object
-  def self.load_file(path)
+  # @param path [String]
+  # @param on_remote [Boolean] whether process is invoked by remote host in :grifork mode or not
+  def self.load_file(path, on_remote: false)
     content = File.binread(path)
-    dsl = new
+    dsl = new(on_remote)
     dsl.instance_eval(content)
     dsl
   end
 
-  def initialize
-    @config = {}
+  def initialize(on_remote)
+    @config    = {}
+    @on_remote = on_remote
   end
 
   def to_config
@@ -37,11 +40,16 @@ class Grifork::DSL
   end
 
   def local(&task)
+    return if @on_remote
     config_set(:local_task, Grifork::Task.new(:local, &task))
   end
 
   def remote(&task)
-    config_set(:remote_task, Grifork::Task.new(:remote, &task))
+    if @on_remote
+      config_set(:local_task, Grifork::Task.new(:local, &task))
+    else
+      config_set(:remote_task, Grifork::Task.new(:remote, &task))
+    end
   end
 
   private

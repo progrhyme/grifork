@@ -1,8 +1,9 @@
 class Grifork::CLI
   def run(argv)
     OptionParser.new do |opt|
-      opt.on('-f', '--file Griforkfile') { |file| @taskfile = file }
-      opt.on('-v', '--version')          { @version = true }
+      opt.on('-f', '--file Griforkfile') { |f| @taskfile = f }
+      opt.on('-r', '--on-remote')        { @on_remote = true }
+      opt.on('-v', '--version')          { @version   = true }
       opt.parse!(argv)
     end
     if @version
@@ -31,7 +32,7 @@ class Grifork::CLI
 
   def load_taskfile
     puts "Load settings from #{taskfile}"
-    Grifork::DSL.load_file(taskfile).to_config
+    Grifork::DSL.load_file(taskfile, on_remote: @on_remote).to_config
   end
 
 
