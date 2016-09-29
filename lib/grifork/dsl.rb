@@ -1,4 +1,6 @@
 class Grifork::DSL
+  attr :config
+
   class LoadError < StandardError; end
 
   # Load DSL file to object
@@ -18,6 +20,14 @@ class Grifork::DSL
 
   def to_config
     Grifork::Config.new(@config)
+  end
+
+  # Load another DSL file and merge its config
+  def load_and_merge_config_by!(path)
+    content = File.binread(path)
+    other   = self.class.new(@on_remote)
+    other.instance_eval(content)
+    @config.merge!(other.config)
   end
 
   def mode(m)

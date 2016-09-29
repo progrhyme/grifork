@@ -70,4 +70,40 @@ describe Grifork::DSL do
       end
     end
   end
+
+  describe '#load_and_merge_config_by!' do
+    let(:content) { nil }
+
+    before do
+      @one = Grifork::DSL.new(false)
+      @one.mode(:standalone)
+      @one.branches(2)
+      @one.hosts([])
+      @dslfile = Tempfile.new('dslfile')
+      File.write(@dslfile.path, content)
+    end
+
+    after do
+      File.unlink(@dslfile.path)
+    end
+
+    subject { @one.load_and_merge_config_by!(@dslfile.path) }
+
+    context 'When another DSL has different params' do
+      let(:content) do
+        <<-EODSL
+          mode :grifork
+          hosts %w(alpha beta gamma)
+        EODSL
+      end
+
+      it 'Params are overridden' do
+        subject
+        expect(@one.config[:mode]).to eq :grifork
+        expect(@one.config[:branches]).to eq 2
+        expect(@one.config[:hosts].size).to eq 3
+      end
+    end
+
+  end
 end

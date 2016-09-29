@@ -1,7 +1,8 @@
 class Grifork::CLI
   def run(argv)
     OptionParser.new do |opt|
-      opt.on('-f', '--file Griforkfile') { |f| @taskfile = f }
+      opt.on('-f', '--file Griforkfile') { |f| @taskfile      = f }
+      opt.on('-o', '--override-by FILE') { |f| @override_file = f }
       opt.on('-r', '--on-remote')        { @on_remote = true }
       opt.on('-v', '--version')          { @version   = true }
       opt.parse!(argv)
@@ -11,7 +12,7 @@ class Grifork::CLI
       exit
     end
 
-    config = load_taskfile.freeze
+    config = load_taskfiles.freeze
     Grifork.configure!(config)
 
     graph = Grifork::Graph.new(config.hosts)
@@ -30,9 +31,13 @@ class Grifork::CLI
 
   private
 
-  def load_taskfile
+  def load_taskfiles
     puts "Load settings from #{taskfile}"
-    Grifork::DSL.load_file(taskfile, on_remote: @on_remote).to_config
+    dsl = Grifork::DSL.load_file(taskfile, on_remote: @on_remote)
+    if @override_file
+      dsl.load_and_merge_config_by!(@override_file)
+    end
+    dsl.to_config
   end
 
 
