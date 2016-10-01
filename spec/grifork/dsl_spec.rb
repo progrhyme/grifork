@@ -22,7 +22,7 @@ describe Grifork::DSL do
         <<-EODSL
           branches 2
           log file: 'path/to/grifork.log'
-          hosts ['web1', { hostname: 'db1', ipaddress: '192.168.1.1' }]
+          hosts ['web1', '192.168.1.1']
           local { p :local }
           remote { p :remote }
         EODSL

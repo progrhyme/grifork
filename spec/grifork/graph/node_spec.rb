@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Grifork::Graph::Node do
   def gen_node
-    Grifork::Graph::Node.new(Grifork::Host.new)
+    Grifork::Graph::Node.new('localhost')
   end
 
   before :context do

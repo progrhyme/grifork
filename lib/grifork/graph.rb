@@ -4,7 +4,7 @@ class Grifork::Graph
   attr :root, :nodes, :depth
 
   def initialize(hosts = [])
-    @root  = Node.new(Grifork.localhost)
+    @root  = Node.new('localhost')
     @depth = @root.level
     @nodes = 1
     @acceptable_nodes = [@root]
@@ -72,7 +72,7 @@ class Grifork::Graph
     Parallel.map(families, in_threads: families.size) do |family|
       parent = family[0]
       child  = family[1]
-      logger.info("Run remote [#{parent.level}]. #{parent.host.hostname} => #{child.host.hostname}")
+      logger.info("Run remote [#{parent.level}]. #{parent.host} => #{child.host}")
       config.remote_task.run(parent.host, child.host)
     end
 

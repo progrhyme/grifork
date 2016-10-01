@@ -54,7 +54,7 @@ class Grifork::DSL
   end
 
   def hosts(list)
-    config_set(:hosts, list.map { |h| Grifork::Host.new(h) })
+    config_set(:hosts, list)
   end
 
   def local(&task)

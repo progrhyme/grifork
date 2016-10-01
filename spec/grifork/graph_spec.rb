@@ -17,12 +17,12 @@ describe Grifork::Graph do
   describe '#launch_tasks' do
     $launch_tasks_log = Pathname.new('tmp/graph_launch_tasks_spec.log')
     let(:config) do
-      hosts      = 1.upto(10).map { |i| Grifork::Host.new("host#{i}") }
+      hosts      = 1.upto(10).map { |i| "host#{i}" }
       local_task = Grifork::Executor::Task.new(:local) do
-        sh "echo LOCAL #{src.hostname}:#{dst.hostname} >> #{$launch_tasks_log}", []
+        sh "echo LOCAL #{src}:#{dst} >> #{$launch_tasks_log}", []
       end
       remote_task = Grifork::Executor::Task.new(:remote) do
-        sh "echo REMOTE #{src.hostname}:#{dst.hostname} >> #{$launch_tasks_log}", []
+        sh "echo REMOTE #{src}:#{dst} >> #{$launch_tasks_log}", []
       end
       Grifork::Config.new(
         branches:    2,
@@ -59,7 +59,7 @@ describe Grifork::Graph do
     before :each do
       @graph = Grifork::Graph.new
       node_num.times do |idx|
-        @graph.add_node_by_host(Grifork::Host.new("host#{idx}"))
+        @graph.add_node_by_host("host#{idx}")
       end
     end
 
