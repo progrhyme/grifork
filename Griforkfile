@@ -24,6 +24,7 @@ end
 # Setting to exec grifork on remote
 #  Implies to set mode as :grifork
 #grifork do
+#  user 'someone'
 #  chdir '/path/to/your-app'
 #  tmpdir '/path/to/tmpdir'
 #  command '/path/to/grifork'

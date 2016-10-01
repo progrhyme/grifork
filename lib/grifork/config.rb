@@ -22,7 +22,7 @@ class Grifork::Config
   end
 
   class Grifork
-    attr :dir, :cmd
+    attr :dir, :cmd, :login
 
     def initialize(&config)
       instance_eval(&config)
@@ -33,6 +33,10 @@ class Grifork::Config
     end
 
     private
+
+    def user(login)
+      @login = login
+    end
 
     def chdir(path)
       @dir = path
