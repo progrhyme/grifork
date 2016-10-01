@@ -1,24 +1,10 @@
-class Grifork::Task
-  attr :src, :dst
+module Grifork::Executable
   include Grifork::Loggable
 
   class CommandFailure < StandardError; end
   class SSHCommandFailure < StandardError; end
 
-  def initialize(type, &task)
-    @type = type
-    @task = task
-  end
-
-  def run(src, dst)
-    @src = src
-    @dst = dst
-    instance_eval(&@task)
-  end
-
-  private
-
-  def sh(cmd, args)
+  def sh(cmd, args = [])
     logger.info("#sh start - #{cmd} #{args}")
     stat = Open3.popen3(cmd.to_s, *args) do |stdin, stdout, stderr, wait_thr|
       stdin.close
@@ -32,23 +18,25 @@ class Grifork::Task
     end
   end
 
-  def ssh(host, cmd, args)
+  def ssh(host, cmd, args = [], user: nil)
     command = "#{cmd} #{args.shelljoin}"
-    logger.info("#ssh start - to: #{host.hostname}, command: #{cmd} #{args}")
-    Net::SSH.start(host.hostname) do |ssh|
+    logger.info("#ssh start - to: #{host}, command: #{cmd} #{args}")
+    ssh_args = [host]
+    ssh_args << user if user
+    Net::SSH.start(*ssh_args) do |ssh|
       channel = ssh.open_channel do |ch|
         ch.exec(command) do |ch, success|
           unless success
-            raise SSHCommandFailure, "Failed to exec ssh command! on: #{host.hostname} command: #{cmd} #{args}"
+            raise SSHCommandFailure, "Failed to exec ssh command! on: #{host} command: #{cmd} #{args}"
           end
 
           ch.on_data do |c, d|
-            d.each_line { |l| logger.info("#ssh [out] #{l.chomp}") }
+            d.each_line { |l| logger.info("#ssh @#{host} [out] #{l.chomp}") }
           end
           ch.on_extended_data do |c, t, d|
-            d.each_line { |l| logger.warn("#ssh [err] #{l.chomp}") }
+            d.each_line { |l| logger.warn("#ssh @#{host} [err] #{l.chomp}") }
           end
-          ch.on_close { logger.debug("#ssh end.") }
+          ch.on_close { logger.debug("#ssh @#{host} end.") }
         end
       end
       channel.wait
@@ -57,13 +45,12 @@ class Grifork::Task
 
   def rsync(from, to = nil)
     to ||= from
-    sh :rsync, [*rsync_opts, from, "#{dst.hostname}:#{to}"]
+    sh :rsync, [*rsync_opts, from, "#{dst}:#{to}"]
   end
 
-  # @todo Implement remote rsync
-  def rsync_remote(from, to = nil)
+  def rsync_remote(from, to = nil, user: nil)
     to ||= from
-    ssh src, :rsync, [*rsync_opts, from, "#{dst.hostname}:#{to}"]
+    ssh src, :rsync, [*rsync_opts, from, "#{dst}:#{to}"], user: user
   end
 
   def rsync_opts
