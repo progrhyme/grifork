@@ -38,6 +38,19 @@ class Grifork::Graph
     fork_remote_tasks(root.children)
   end
 
+  # Run grifork command on child nodes recursively
+  def grifork
+    if root.children.size.zero?
+      logger.debug("#{root} Reached leaf. Nothing to do.")
+      return
+    end
+    Parallel.map(root.children, in_processes: root.children.size) do |child|
+      logger.info("Run locally. localhost => #{child.host}")
+      config.local_task.run(root.host, child.host)
+      Grifork::Executor::Grifork.new(config.grifork).run(child)
+    end
+  end
+
   # Print graph structure for debug usage
   def print(node = root)
     puts %(  ) * node.level + "#{node}"

@@ -16,6 +16,7 @@ class Grifork
   require_relative 'grifork/graph/node'
   require_relative 'grifork/executor'
   require_relative 'grifork/mixin/executable'
+  require_relative 'grifork/executor/grifork'
   require_relative 'grifork/executor/task'
   require_relative 'grifork/dsl'
   require_relative 'grifork/cli'

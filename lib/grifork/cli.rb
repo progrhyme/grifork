@@ -16,13 +16,12 @@ class Grifork::CLI
     Grifork.configure!(config)
 
     graph = Grifork::Graph.new(config.hosts)
-    #graph.print # Debug
 
     case config.mode
     when :standalone
       graph.launch_tasks
     when :grifork
-      raise 'Not implemented yet!'
+      graph.grifork
     else
       # Never comes here
       raise "Unexpected mode! #{config.mode}"
