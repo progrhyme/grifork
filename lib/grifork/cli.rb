@@ -37,9 +37,10 @@ class Grifork::CLI
     if @override_file
       dsl.load_and_merge_config_by!(@override_file)
     end
-    dsl.to_config
+    config = dsl.to_config
+    config.griforkfile = taskfile
+    config
   end
-
 
   def taskfile
     @taskfile || ENV['GRIFORKFILE'] || Grifork::DEFAULT_TASKFILE
