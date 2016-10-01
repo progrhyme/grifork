@@ -17,6 +17,10 @@ class Grifork::CLI
 
     graph = Grifork::Graph.new(config.hosts)
 
+    if @on_remote
+      puts "Start on remote. Hosts: #{config.hosts}"
+    end
+
     case config.mode
     when :standalone
       graph.launch_tasks
@@ -25,6 +29,10 @@ class Grifork::CLI
     else
       # Never comes here
       raise "Unexpected mode! #{config.mode}"
+    end
+
+    if @on_remote
+      puts "End on remote."
     end
   end
 

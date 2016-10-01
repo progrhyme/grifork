@@ -31,12 +31,12 @@ module Grifork::Executable
           end
 
           ch.on_data do |c, d|
-            d.each_line { |l| logger.info("#ssh [out] #{l.chomp}") }
+            d.each_line { |l| logger.info("#ssh @#{host} [out] #{l.chomp}") }
           end
           ch.on_extended_data do |c, t, d|
-            d.each_line { |l| logger.warn("#ssh [err] #{l.chomp}") }
+            d.each_line { |l| logger.warn("#ssh @#{host} [err] #{l.chomp}") }
           end
-          ch.on_close { logger.debug("#ssh end.") }
+          ch.on_close { logger.debug("#ssh @#{host} end.") }
         end
       end
       channel.wait
