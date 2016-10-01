@@ -8,11 +8,13 @@ describe Grifork::DSL do
     let(:on_remote) { false }
     before do
       @dsl = Tempfile.new('dsl')
-      File.write(@dsl.path, content)
+      @dsl.write(content)
+      @dsl.flush
     end
 
     after do
-      File.unlink(@dsl.path)
+      @dsl.close
+      @dsl.unlink
     end
 
     subject { Grifork::DSL.load_file(@dsl.path, on_remote: on_remote) }
