@@ -10,7 +10,7 @@ hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
 # Define task run on localhost
 local do
   sh :echo, %W(LOCAL: #{src} => #{dst})
-  ssh dst, :mkdir, %W(-p /path/to/dest)
+  ssh dst, :mkdir, %W(-p /path/to/dest), user: 'someone'
   rsync '/path/to/src/', '/path/to/dest/'
 end
 
@@ -18,7 +18,7 @@ end
 remote do
   sh :echo, %W(REMOTE: #{src} => #{dst})
   ssh dst, :mkdir, %W(-p /path/to/dest)
-  rsync_remote '/path/to/src/', '/path/to/dest/'
+  rsync_remote '/path/to/src/', '/path/to/dest/', user: 'someone'
 end
 
 # Setting to exec grifork on remote

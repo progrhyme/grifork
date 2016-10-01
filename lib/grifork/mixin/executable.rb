@@ -18,10 +18,12 @@ module Grifork::Executable
     end
   end
 
-  def ssh(host, cmd, args = [])
+  def ssh(host, cmd, args = [], user: nil)
     command = "#{cmd} #{args.shelljoin}"
     logger.info("#ssh start - to: #{host}, command: #{cmd} #{args}")
-    Net::SSH.start(host) do |ssh|
+    ssh_args = [host]
+    ssh_args << user if user
+    Net::SSH.start(*ssh_args) do |ssh|
       channel = ssh.open_channel do |ch|
         ch.exec(command) do |ch, success|
           unless success
@@ -46,10 +48,9 @@ module Grifork::Executable
     sh :rsync, [*rsync_opts, from, "#{dst}:#{to}"]
   end
 
-  # @todo Implement remote rsync
-  def rsync_remote(from, to = nil)
+  def rsync_remote(from, to = nil, user: nil)
     to ||= from
-    ssh src, :rsync, [*rsync_opts, from, "#{dst}:#{to}"]
+    ssh src, :rsync, [*rsync_opts, from, "#{dst}:#{to}"], user: user
   end
 
   def rsync_opts
