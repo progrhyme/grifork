@@ -1,1 +1,1 @@
-Grifork::VERSION = '0.1.0'
+Grifork::VERSION = '0.2.0'
