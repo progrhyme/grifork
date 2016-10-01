@@ -53,4 +53,16 @@ class Grifork::Graph::Node
   def acceptable?
     children.size < config.branches
   end
+
+  def all_descendant_nodes
+    @descendants  = @children
+    @descendables = @children.select { |c| c.children.size > 0 }
+    while @descendables.size > 0
+      child = @descendables.shift
+      @descendants.concat(child.children)
+      new_descendables = child.children { |n| n.children.size > 0 }
+      @descendables.concat(new_descendables)
+    end
+    @descendants
+  end
 end
