@@ -27,4 +27,11 @@ remote do
   rsync_remote %w(/path/to/src/ /path/to/dest/)
 end
 
+# Setting to exec grifork on remote
+#  Implies to set mode as :grifork
+#grifork do
+#  chdir '/path/to/your-app'
+#  command '/path/to/grifork'
+#end
+
 # vim:set ft=ruby :

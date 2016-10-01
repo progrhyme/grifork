@@ -37,6 +37,14 @@ class Grifork::DSL
     config_set(:mode, m)
   end
 
+  def grifork(&command)
+    if @config[:mode] == :standalone
+      raise LoadError, "Can't configure grifork in standalone mode"
+    end
+    @config[:mode] = :grifork
+    config_set(:grifork, Grifork::Config::Grifork.new(&command))
+  end
+
   def branches(num)
     config_set(:branches, num)
   end
