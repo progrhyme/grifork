@@ -4,7 +4,7 @@ module Grifork::Executable
   class CommandFailure < StandardError; end
   class SSHCommandFailure < StandardError; end
 
-  def sh(cmd, args)
+  def sh(cmd, args = [])
     logger.info("#sh start - #{cmd} #{args}")
     stat = Open3.popen3(cmd.to_s, *args) do |stdin, stdout, stderr, wait_thr|
       stdin.close
@@ -18,7 +18,7 @@ module Grifork::Executable
     end
   end
 
-  def ssh(host, cmd, args)
+  def ssh(host, cmd, args = [])
     command = "#{cmd} #{args.shelljoin}"
     logger.info("#ssh start - to: #{host}, command: #{cmd} #{args}")
     Net::SSH.start(host) do |ssh|
