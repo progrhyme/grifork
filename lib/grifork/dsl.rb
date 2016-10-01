@@ -59,14 +59,14 @@ class Grifork::DSL
 
   def local(&task)
     return if @on_remote
-    config_set(:local_task, Grifork::Task.new(:local, &task))
+    config_set(:local_task, Grifork::Executor::Task.new(:local, &task))
   end
 
   def remote(&task)
     if @on_remote
-      config_set(:local_task, Grifork::Task.new(:local, &task))
+      config_set(:local_task, Grifork::Executor::Task.new(:local, &task))
     else
-      config_set(:remote_task, Grifork::Task.new(:remote, &task))
+      config_set(:remote_task, Grifork::Executor::Task.new(:remote, &task))
     end
   end
 

@@ -1,22 +1,8 @@
-class Grifork::Task
-  attr :src, :dst
+module Grifork::Executable
   include Grifork::Loggable
 
   class CommandFailure < StandardError; end
   class SSHCommandFailure < StandardError; end
-
-  def initialize(type, &task)
-    @type = type
-    @task = task
-  end
-
-  def run(src, dst)
-    @src = src
-    @dst = dst
-    instance_eval(&@task)
-  end
-
-  private
 
   def sh(cmd, args)
     logger.info("#sh start - #{cmd} #{args}")
