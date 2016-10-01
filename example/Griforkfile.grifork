@@ -1,8 +1,16 @@
 # Configuration
-mode :standalone
 #mode :grifork
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
+
+# Setting to exec grifork on remote
+#  Implies to set mode as :grifork
+grifork do
+  user    'someone' # ssh user to exec grifork on remote
+  chdir   '/path/to/your-app'
+  tmpdir  '/path/to/tmpdir'
+  command '/path/to/grifork'
+end
 
 # Define hosts as array
 hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
@@ -15,19 +23,11 @@ local do
 end
 
 # Define task run on remote hosts
+# NOTE: This task is run as "local" task on remote
+#  different from "remote" task in :standalone mode
 remote do
   sh :echo, %W(REMOTE: #{src} => #{dst})
-  ssh dst, :mkdir, %W(-p /path/to/dest)
-  rsync_remote '/path/to/src/', '/path/to/dest/', user: 'someone'
+  ssh dst, :mkdir, %W(-p /path/to/dest), user: 'someone'
+  rsync '/path/to/src/', '/path/to/dest/'
 end
 
-# Setting to exec grifork on remote
-#  Implies to set mode as :grifork
-#grifork do
-#  user 'someone'
-#  chdir '/path/to/your-app'
-#  tmpdir '/path/to/tmpdir'
-#  command '/path/to/grifork'
-#end
-
-# vim:set ft=ruby :
