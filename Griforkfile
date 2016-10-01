@@ -25,6 +25,7 @@ end
 #  Implies to set mode as :grifork
 #grifork do
 #  chdir '/path/to/your-app'
+#  tmpdir '/path/to/tmpdir'
 #  command '/path/to/grifork'
 #end
 

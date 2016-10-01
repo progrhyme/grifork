@@ -27,6 +27,10 @@ class Grifork::Config
       instance_eval(&config)
     end
 
+    def workdir
+      @tmpdir || Dir.tmpdir
+    end
+
     private
 
     def chdir(path)
@@ -35,6 +39,10 @@ class Grifork::Config
 
     def command(list)
       @cmd = list
+    end
+
+    def tmpdir(path)
+      @tmpdir = path
     end
   end
 end
