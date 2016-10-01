@@ -42,8 +42,8 @@ class Grifork::Config
       @dir = path
     end
 
-    def command(list)
-      @cmd = list
+    def exec(cmd)
+      @cmd = cmd
     end
 
     def tmpdir(path)

@@ -6,10 +6,10 @@ log file: 'tmp/grifork.log', level: 'debug'
 # Setting to exec grifork on remote
 #  Implies to set mode as :grifork
 grifork do
-  user    'someone' # ssh user to exec grifork on remote
-  chdir   '/path/to/your-app'
-  tmpdir  '/path/to/tmpdir'
-  command '/path/to/grifork'
+  user   'someone' # ssh user to exec grifork on remote
+  chdir  '/path/to/your-app'
+  tmpdir '/path/to/tmpdir'
+  exec   '/path/to/grifork'
 end
 
 # Define hosts as array
