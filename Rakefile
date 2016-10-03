@@ -1,3 +1,5 @@
+require "bundler/gem_tasks"
+
 desc 'Open a pry session preloaded with the library'
 task :console do
   sh 'pry --gem'
