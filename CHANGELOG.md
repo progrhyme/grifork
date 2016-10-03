@@ -1,3 +1,7 @@
+## 0.3.0 (2016/10/4)
+
+Release as a RubyGem.
+
 ## 0.2.0 (2016/10/2)
 
 Feature:
