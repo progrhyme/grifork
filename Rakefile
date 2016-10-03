@@ -13,12 +13,14 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
 end
 task :default => :spec
 
-desc 'Create git tag and release to origin'
-task :release do
-  require_relative 'lib/grifork'
-  version = Grifork::VERSION
-  sh "git commit -m #{version}"
-  sh "git tag -a v#{version} -m #{version}"
-  sh "git push origin master"
-  sh "git push origin v#{version}"
+namespace :git do
+  desc 'Bump git tag and release to origin'
+  task :bump do
+    require_relative 'lib/grifork'
+    version = Grifork::VERSION
+    sh "git commit -m #{version}"
+    sh "git tag -a v#{version} -m #{version}"
+    sh "git push origin master"
+    sh "git push origin v#{version}"
+  end
 end
