@@ -20,25 +20,14 @@ class Grifork::Executor::Task
 
   private
 
-  # Shorthand for +rsync+ command.
-  # Sync contents to #dst host
-  # @param from [String] Path to source file or directory
-  # @param to   [String] Path to destination at remote host.
-  #  If you omit this param, it will be the same with +from+ param
+  # Wrapper for {Grifork::Executable#rsync}
   def rsync(from, to = nil)
-    to ||= from
-    sh :rsync, [*config.rsync.options, from, "#{dst}:#{to}"]
+    super(dst, from, to)
   end
 
-  # Shorthand for +rsync+ command run by +ssh+ to #src host
-  # Sync contents from #src to #dst host
+  # Wrapper for {Grifork::Executable#rsync_remote}
   # @note This is for +remote+ task on +:standalone+ mode
-  # @param from [String] Path to source file or directory
-  # @param to   [String] Path to destination at remote host.
-  #  If you omit this param, it will be the same with +from+ param
-  # @param user [String] see #ssh
   def rsync_remote(from, to = nil, user: nil)
-    to ||= from
-    ssh src, :rsync, [*config.rsync.options, from, "#{dst}:#{to}"], user: user
+    super(src, dst, from, to, user: user)
   end
 end

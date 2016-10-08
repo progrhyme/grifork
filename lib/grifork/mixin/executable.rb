@@ -61,4 +61,28 @@ module Grifork::Executable
       channel.wait
     end
   end
+
+  # Shorthand for +rsync+ command.
+  # Sync contents to target host
+  # @param host [String] Target hostname
+  # @param from [String] Path to source file or directory
+  # @param to   [String] Path to destination at remote host.
+  #  If you omit this param, it will be the same with +from+ param
+  def rsync(host, from, to = nil)
+    to ||= from
+    sh :rsync, [*config.rsync.options, from, "#{host}:#{to}"]
+  end
+
+  # Shorthand for +rsync+ command run by +ssh+ to source host
+  # Sync contents from source host to target host
+  # @param src  [String] Source hostname to login by +ssh+
+  # @param dst  [String] Target hostname
+  # @param from [String] Path to source file or directory
+  # @param to   [String] Path to destination at remote host.
+  #  If you omit this param, it will be the same with +from+ param
+  # @param user [String] see {#ssh}
+  def rsync_remote(src, dst, from, to = nil, user: nil)
+    to ||= from
+    ssh src, :rsync, [*config.rsync.options, from, "#{dst}:#{to}"], user: user
+  end
 end
