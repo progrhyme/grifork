@@ -64,6 +64,19 @@ class Grifork::DSL
     config_set(:hosts, list)
   end
 
+  # Configure rsync command options
+  # @params props [Array, Hash] rsync option parameters
+  # @example
+  #   # Available full Hash options are bellow
+  #   rsync delete: true, bwlimit: 4096, verbose: false, exclude: nil
+  #   # This is the same with above by Array format:
+  #   rsync %w(-az --delete --bwlimit=4096)
+  #   # You can set more options by Array format:
+  #   rsync %w(-azKc -e=rsh --delete --bwlimit=4096 --exclude-from=path/to/rsync.excludes)
+  def rsync(props)
+    config_set(:rsync, Grifork::Config::Rsync.new(props))
+  end
+
   def local(&task)
     return if @on_remote
     config_set(:local_task, Grifork::Executor::Task.new(:local, &task))

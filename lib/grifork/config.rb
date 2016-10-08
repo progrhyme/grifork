@@ -16,6 +16,10 @@ class Grifork::Config
     @parallel || :in_threads
   end
 
+  def rsync
+    @rsync || Rsync.new
+  end
+
   def dry_run?
     @dry_run ? true : false
   end
@@ -26,6 +30,31 @@ class Grifork::Config
     def initialize(args)
       @file  = args[:file]
       @level = args[:level] || 'info'
+    end
+  end
+
+  class Rsync
+    def initialize(args = %w(-az --delete))
+      case args
+      when Array
+        @options = args
+      when Hash
+        @delete  = args[:delete]  || true
+        @verbose = args[:verbose] || false
+        @bwlimit = args[:bwlimit] || nil
+        @exclude = args[:exclude] || nil
+      end
+    end
+
+    def options
+      @options ||= -> {
+        opts = []
+        opts << ( @verbose ? '-avz' : '-az' )
+        opts << '--delete'              if @delete
+        opts << "--bwlimit=#{@bwlimit}" if @bwlimit
+        opts << "--exclude=#{@exclude}" if @exclude
+        opts
+      }.call
     end
   end
 
