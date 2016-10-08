@@ -47,7 +47,7 @@ class Grifork::Graph
     Parallel.map(root.children, in_processes: root.children.size) do |child|
       logger.info("Run locally. localhost => #{child.host}")
       config.local_task.run(root.host, child.host)
-      Grifork::Executor::Grifork.new(config.grifork).run(child)
+      Grifork::Executor::Grifork.new.run(child)
     end
   end
 

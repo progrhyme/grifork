@@ -1,19 +1,13 @@
 class Grifork::Executor::Grifork
   include Grifork::Executable
-  attr :config
-
-  # @param cfg [Grifork::Config::Grifork] configured by DSL#grifork
-  def initialize(cfg)
-    @config = cfg
-  end
 
   # Run grifork command on remote node:
   #  1. Create Griforkfile and copy it to remote
   #  2. ssh remote host and exec grifork
   def run(node)
-    c = config
+    c = config.grifork
     ssh node.host, %(test -d "#{c.workdir}" || mkdir -p "#{c.workdir}"), user: c.login
-    sh :rsync, ['-avzc', Grifork.config.griforkfile, "#{node.host}:#{c.workdir}/Griforkfile"]
+    sh :rsync, ['-avzc', config.griforkfile, "#{node.host}:#{c.workdir}/Griforkfile"]
     hostsfile = Tempfile.create('Griforkfile.hosts')
     hostsfile.write(<<-EOS)
       hosts #{node.all_descendant_nodes.map(&:host)}
