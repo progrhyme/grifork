@@ -67,7 +67,7 @@ module Grifork::Executable
   #  If you omit this param, it will be the same with +from+ param
   def rsync(host, from, to = nil)
     to ||= from
-    sh :rsync, [*config.rsync.options, from, "#{host}:#{to}"]
+    sh :rsync, [*config.rsync_opts, from, "#{host}:#{to}"]
   end
 
   # Shorthand for +rsync+ command run by +ssh+ to source host
@@ -79,6 +79,6 @@ module Grifork::Executable
   #  If you omit this param, it will be the same with +from+ param
   def rsync_remote(src, dst, from, to = nil)
     to ||= from
-    ssh src, :rsync, [*config.rsync.options, from, "#{dst}:#{to}"]
+    ssh src, :rsync, [*config.rsync_opts, from, "#{dst}:#{to}"]
   end
 end

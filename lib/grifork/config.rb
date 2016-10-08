@@ -16,16 +16,25 @@ class Grifork::Config
     @parallel || :in_threads
   end
 
+  def dry_run?
+    @dry_run ? true : false
+  end
+
   def ssh
     @ssh || SSH.new
   end
 
-  def rsync
-    @rsync || Rsync.new
-  end
-
-  def dry_run?
-    @dry_run ? true : false
+  # Build +rsync+ command-line options from +@rsync+ and +@ssh+ objects
+  # @return [Array<String>] +rsync+ command options
+  # @see Rsync
+  # @see SSH
+  def rsync_opts
+    @rsync ||= Rsync.new
+    opts = @rsync.options
+    if opts.grep(/^(-e|--rsh)[= ]\S+/).size.zero?
+      opts << %(--rsh="#{ssh.command_for_rsync}")
+    end
+    opts
   end
 
   class Log
@@ -41,6 +50,18 @@ class Grifork::Config
     attr :options
     def initialize(opts = {})
       @options = opts
+    end
+
+    # Build +ssh+ command with options
+    # @return [String] +ssh+ command with options
+    def command_for_rsync
+      args = []
+      args << "-l #{@options[:user]}" if @options[:user]
+      args << "-p #{@options[:port]}" if @options[:port]
+      if @options[:keys]
+        @options[:keys].each { |key| args << "-i #{key}" }
+      end
+      "ssh #{args.join(' ')}"
     end
   end
 
