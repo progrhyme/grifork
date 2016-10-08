@@ -10,10 +10,15 @@ log file: 'tmp/grifork.log', level: 'debug'
 #  Defaults to :in_threads
 #parallel :in_processes
 
+# Configure ssh options for #ssh & #grifork
+#  With private key auth:
+ssh user: 'someone', keys: ['path/to/identity_file'], passphrase: 'xxx'
+#  With password auth:
+#ssh user: 'someone', password: 'xxx'
+
 # Setting to exec grifork on remote
 #  Implies to set mode as :grifork
 grifork do
-  user   'someone' # ssh user to exec grifork on remote
   chdir  '/path/to/your-app'
   tmpdir '/path/to/tmpdir'
   exec   '/path/to/grifork'
@@ -30,7 +35,7 @@ rsync delete: true, bwlimit: 4096, verbose: false, exclude: nil
 # Define task run on localhost
 local do
   sh :echo, %W(LOCAL: #{src} => #{dst})
-  ssh dst, :mkdir, %W(-p /path/to/dest), user: 'someone'
+  ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync '/path/to/src/', '/path/to/dest/'
 end
 
@@ -39,7 +44,7 @@ end
 #  different from "remote" task in :standalone mode
 remote do
   sh :echo, %W(REMOTE: #{src} => #{dst})
-  ssh dst, :mkdir, %W(-p /path/to/dest), user: 'someone'
+  ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync '/path/to/src/', '/path/to/dest/'
 end
 
