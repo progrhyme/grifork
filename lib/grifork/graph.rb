@@ -47,6 +47,10 @@ class Grifork::Graph
     Parallel.map(root.children, config.parallel => root.children.size) do |child|
       logger.info("Run locally. localhost => #{child.host}")
       config.local_task.run(root.host, child.host)
+      if child.children.size.zero?
+        logger.debug("#{child} Reached leaf. Nothing to do.")
+        next
+      end
       Grifork::Executor::Grifork.new.run(child)
     end
   end
