@@ -80,6 +80,22 @@ class Grifork::DSL
     config_set(:hosts, list)
   end
 
+  # Configure net-ssh options
+  # @params props [Hash] Options for Net::SSH
+  # @example
+  #   # Password authentication
+  #   ssh user: 'someone', password: 'xxx'
+  #   # Private key authentication
+  #   ssh user: 'someone', keys: ['path/to/priv_key'], passphrase: 'xxx'
+  # @see https://github.com/net-ssh/net-ssh
+  def ssh(props)
+    invalid_options = props.keys - Net::SSH::VALID_OPTIONS
+    if invalid_options.size > 0
+      raise LoadError, "#{invalid_options} are invalid for Net::SSH!"
+    end
+    config_set(:ssh, Grifork::Config::SSH.new(props))
+  end
+
   # Configure rsync command options
   # @params props [Array, Hash] rsync option parameters
   # @example

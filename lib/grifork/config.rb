@@ -16,6 +16,10 @@ class Grifork::Config
     @parallel || :in_threads
   end
 
+  def ssh
+    @ssh || SSH.new
+  end
+
   def rsync
     @rsync || Rsync.new
   end
@@ -30,6 +34,13 @@ class Grifork::Config
     def initialize(args)
       @file  = args[:file]
       @level = args[:level] || 'info'
+    end
+  end
+
+  class SSH
+    attr :options
+    def initialize(opts = {})
+      @options = opts
     end
   end
 
