@@ -56,15 +56,11 @@ module Grifork::Executable
 
   def rsync(from, to = nil)
     to ||= from
-    sh :rsync, [*rsync_opts, from, "#{dst}:#{to}"]
+    sh :rsync, [*config.rsync.options, from, "#{dst}:#{to}"]
   end
 
   def rsync_remote(from, to = nil, user: nil)
     to ||= from
-    ssh src, :rsync, [*rsync_opts, from, "#{dst}:#{to}"], user: user
-  end
-
-  def rsync_opts
-    %w(-avzc --delete)
+    ssh src, :rsync, [*config.rsync.options, from, "#{dst}:#{to}"], user: user
   end
 end
