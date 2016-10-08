@@ -71,10 +71,12 @@ class Grifork::Config
       when Array
         @options = args
       when Hash
-        @delete  = args[:delete]  || true
-        @verbose = args[:verbose] || false
-        @bwlimit = args[:bwlimit] || nil
-        @exclude = args[:exclude] || nil
+        @delete   = args[:delete]   || true
+        @verbose  = args[:verbose]  || false
+        @bwlimit  = args[:bwlimit]  || nil
+        @excludes = args[:excludes] || []
+        @rsh      = args[:rsh]      || nil
+        @dry_run  = args[:dry_run]  || false
       end
     end
 
@@ -82,9 +84,13 @@ class Grifork::Config
       @options ||= -> {
         opts = []
         opts << ( @verbose ? '-avz' : '-az' )
+        opts << '--dry-run'             if @dry_run
         opts << '--delete'              if @delete
+        opts << %(--rsh="#{@rsh}")      if @rsh
         opts << "--bwlimit=#{@bwlimit}" if @bwlimit
-        opts << "--exclude=#{@exclude}" if @exclude
+        if @excludes.size > 0
+          @excludes.each { |ex| opts << "--exclude=#{ex}" }
+        end
         opts
       }.call
     end

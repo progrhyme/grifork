@@ -100,9 +100,9 @@ class Grifork::DSL
   # @params props [Array, Hash] rsync option parameters
   # @example
   #   # Available full Hash options are bellow
-  #   rsync delete: true, bwlimit: 4096, verbose: false, exclude: nil
+  #   rsync delete: true, bwlimit: 4096, verbose: false, excludes: %w(.git* .svn*), rsh: nil, dry_run: false
   #   # This is the same with above by Array format:
-  #   rsync %w(-az --delete --bwlimit=4096)
+  #   rsync %w(-az --delete --bwlimit=4096 --exclude=.git* --exclude=.svn*)
   #   # You can set more options by Array format:
   #   rsync %w(-azKc -e=rsh --delete --bwlimit=4096 --exclude-from=path/to/rsync.excludes)
   def rsync(props)
