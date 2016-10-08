@@ -1,6 +1,5 @@
 class Grifork::Executor::Task
   include Grifork::Executable
-  attr :src, :dst
 
   # Initialize with task
   # @param &task [Proc] task to execute
@@ -13,12 +12,20 @@ class Grifork::Executor::Task
   # @param src [String] Source hostname
   # @param dst [String] Target hostname
   def run(src, dst)
-    @src = src
-    @dst = dst
+    Thread.current[:src] = src
+    Thread.current[:dst] = dst
     instance_eval(&@task)
   end
 
   private
+
+  def src
+    Thread.current[:src]
+  end
+
+  def dst
+    Thread.current[:dst]
+  end
 
   # Wrapper for {Grifork::Executable#rsync}
   def rsync(from, to = nil)
