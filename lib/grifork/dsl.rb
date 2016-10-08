@@ -1,10 +1,14 @@
+# DSL parser for *Griforkfile*
+#
+# _Griforkfile_ is interpreted in instance context by an object of this Class.
 class Grifork::DSL
   attr :config
 
   class LoadError < StandardError; end
 
   # Load DSL file to object
-  # @param path [String]
+  # @return [Grifork::DSL]
+  # @param path [String] path of DSL file
   # @param on_remote [Boolean] whether process is invoked by remote host in :grifork mode or not
   def self.load_file(path, on_remote: false)
     content = File.binread(path)
