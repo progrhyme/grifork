@@ -12,6 +12,10 @@ class Grifork::Config
     @mode || :standalone
   end
 
+  def parallel
+    @parallel || :in_threads
+  end
+
   def dry_run?
     @dry_run ? true : false
   end

@@ -30,7 +30,7 @@ class Grifork::Graph
   # Launch local and remote tasks through whole graph
   def launch_tasks
     # level = 1
-    Parallel.map(root.children, in_threads: root.children.size) do |node|
+    Parallel.map(root.children, config.parallel => root.children.size) do |node|
       logger.info("Run locally. localhost => #{node.host}")
       config.local_task.run(root.host, node.host)
     end
@@ -44,7 +44,7 @@ class Grifork::Graph
       logger.debug("#{root} Reached leaf. Nothing to do.")
       return
     end
-    Parallel.map(root.children, in_processes: root.children.size) do |child|
+    Parallel.map(root.children, config.parallel => root.children.size) do |child|
       logger.info("Run locally. localhost => #{child.host}")
       config.local_task.run(root.host, child.host)
       Grifork::Executor::Grifork.new.run(child)
@@ -82,7 +82,7 @@ class Grifork::Graph
       return
     end
 
-    Parallel.map(families, in_threads: families.size) do |family|
+    Parallel.map(families, config.parallel => families.size) do |family|
       parent = family[0]
       child  = family[1]
       logger.info("Run remote [#{parent.level}]. #{parent.host} => #{child.host}")

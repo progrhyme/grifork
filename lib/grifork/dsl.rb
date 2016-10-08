@@ -53,6 +53,13 @@ class Grifork::DSL
     config_set(:log, Grifork::Config::Log.new(args))
   end
 
+  def parallel(how)
+    unless %i(in_threads in_processes).include?(how)
+      raise LoadError, "Invalid parallel mode! #{how.inspect} / must be :in_threads or :in_processes"
+    end
+    config_set(:parallel, how)
+  end
+
   def hosts(list)
     config_set(:hosts, list)
   end
