@@ -1,6 +1,6 @@
 class Grifork::Config
   attr_reader   :branches, :hosts, :log, :local_task, :remote_task, :grifork
-  attr_accessor :griforkfile
+  attr_accessor :griforkfile, :dry_run
 
   def initialize(args)
     args.each do |key, val|
@@ -10,6 +10,10 @@ class Grifork::Config
 
   def mode
     @mode || :standalone
+  end
+
+  def dry_run?
+    @dry_run ? true : false
   end
 
   class Log
