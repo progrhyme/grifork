@@ -1,26 +1,28 @@
 class Grifork::Executor::Grifork
   include Grifork::Executable
-  attr :config
 
-  # @param cfg [Grifork::Config::Grifork] configured by DSL#grifork
-  def initialize(cfg)
-    @config = cfg
+  # Run grifork command on remote node.
+  #
+  # 1. Create +Griforkfile+ and copy it to remote
+  # 2. Login remote host by +ssh+ and execute +grifork+ command
+  def run(node)
+    c = config.grifork
+    ssh node.host, %(test -d "#{c.workdir}" || mkdir -p "#{c.workdir}")
+    rsync(node.host, config.griforkfile, "#{c.workdir}/Griforkfile")
+    prepare_grifork_hosts_file_on_remote(node)
+    ssh node.host, %(cd #{c.dir} && #{c.cmd} --file #{c.workdir}/Griforkfile --override-by #{c.workdir}/Griforkfile.hosts --on-remote)
   end
 
-  # Run grifork command on remote node:
-  #  1. Create Griforkfile and copy it to remote
-  #  2. ssh remote host and exec grifork
-  def run(node)
-    c = config
-    ssh node.host, %(test -d "#{c.workdir}" || mkdir -p "#{c.workdir}"), user: c.login
-    sh :rsync, ['-avzc', Grifork.config.griforkfile, "#{node.host}:#{c.workdir}/Griforkfile"]
+  private
+
+  def prepare_grifork_hosts_file_on_remote(node)
+    c = config.grifork
     hostsfile = Tempfile.create('Griforkfile.hosts')
     hostsfile.write(<<-EOS)
       hosts #{node.all_descendant_nodes.map(&:host)}
     EOS
     hostsfile.flush
-    sh :rsync, ['-avzc', hostsfile.path, "#{node.host}:#{c.workdir}/Griforkfile.hosts"]
+    rsync(node.host, hostsfile.path, "#{c.workdir}/Griforkfile.hosts")
     hostsfile.close
-    ssh node.host, %(cd #{c.dir} && #{c.cmd} --file #{c.workdir}/Griforkfile --override-by #{c.workdir}/Griforkfile.hosts --on-remote), [], user: c.login
   end
 end

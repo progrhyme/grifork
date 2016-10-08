@@ -64,10 +64,36 @@ bundle
 
 ```sh
 edit Griforkfile
-./bin/grifork [--[f]ile path/to/Griforkfile]
+./bin/grifork [--[f]ile path/to/Griforkfile] [-n|--dry-run]
 ```
 
-See [example](example) directory for sample of Griforkfiles.
+## Griforkfile
+
+**Griforkfile** is DSL file for _grifork_ which configures and defines the tasks
+to be executed by _grifork_.
+
+Here is a small example:
+
+```ruby
+branches 4
+log file: 'grifork.log'
+hosts ['web1.internal', 'web2.internal', 'db1.internal', 'db2.internal', ...]
+
+local do
+  rsync '/path/to/myapp/'
+end
+
+remote do
+  rsync_remote '/path/to/myapp/'
+end
+```
+
+If you run `grifork` with this _Griforkfile_, it just syncs `/path/to/myapp/` in
+localhost to target `hosts` by `rsync` command.
+
+See [example](https://github.com/key-amb/grifork/tree/master/example) directory for more examples of _Griforkfile_.
+
+And refer to [Grifork::DSL](http://www.rubydoc.info/gems/grifork/Grifork/DSL) as API document of _Griforkfile_.
 
 # Authors
 

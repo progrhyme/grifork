@@ -4,6 +4,7 @@ class Grifork::CLI
       opt.on('-f', '--file Griforkfile') { |f| @taskfile      = f }
       opt.on('-o', '--override-by FILE') { |f| @override_file = f }
       opt.on('-r', '--on-remote')        { @on_remote = true }
+      opt.on('-n', '--dry-run')          { @dry_run   = true }
       opt.on('-v', '--version')          { @version   = true }
       opt.parse!(argv)
     end
@@ -12,11 +13,17 @@ class Grifork::CLI
       exit
     end
 
-    config = load_taskfiles.freeze
+    config = load_taskfiles
+    if @dry_run
+      config.dry_run = true
+    end
+    config.freeze
     Grifork.configure!(config)
+    logger = Grifork.logger
 
     graph = Grifork::Graph.new(config.hosts)
 
+    logger.info("START | mode: #{config.mode}")
     if @on_remote
       puts "Start on remote. Hosts: #{config.hosts}"
     end
@@ -31,6 +38,7 @@ class Grifork::CLI
       raise "Unexpected mode! #{config.mode}"
     end
 
+    logger.info("END | mode: #{config.mode}")
     if @on_remote
       puts "End on remote."
     end

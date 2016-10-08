@@ -1,12 +1,24 @@
+# Example of Grifork DSL for :grifok mode
+# See Grifork::DSL for more informaion about DSL format
+
 # Configuration
 #mode :grifork
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
 
+# Parallel mode for "parallel"
+#  Defaults to :in_threads
+#parallel :in_processes
+
+# Configure ssh options for #ssh & #grifork
+#  With private key auth:
+ssh user: 'someone', keys: ['path/to/identity_file'], passphrase: 'xxx'
+#  With password auth:
+#ssh user: 'someone', password: 'xxx'
+
 # Setting to exec grifork on remote
 #  Implies to set mode as :grifork
 grifork do
-  user   'someone' # ssh user to exec grifork on remote
   chdir  '/path/to/your-app'
   tmpdir '/path/to/tmpdir'
   exec   '/path/to/grifork'
@@ -15,10 +27,15 @@ end
 # Define hosts as array
 hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
 
+# Configure rsync options
+#  Defaults to ['-az', '--delete']
+# Available full Hash options are bellow:
+rsync delete: true, bwlimit: 4096, verbose: false, excludes: [], rsh: nil, dry_run: false
+
 # Define task run on localhost
 local do
   sh :echo, %W(LOCAL: #{src} => #{dst})
-  ssh dst, :mkdir, %W(-p /path/to/dest), user: 'someone'
+  ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync '/path/to/src/', '/path/to/dest/'
 end
 
@@ -27,7 +44,7 @@ end
 #  different from "remote" task in :standalone mode
 remote do
   sh :echo, %W(REMOTE: #{src} => #{dst})
-  ssh dst, :mkdir, %W(-p /path/to/dest), user: 'someone'
+  ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync '/path/to/src/', '/path/to/dest/'
 end
 

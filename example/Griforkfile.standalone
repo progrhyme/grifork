@@ -1,15 +1,32 @@
-# Configuration
+# Example of Grifork DSL for :standalone mode
+# See Grifork::DSL for more informaion about DSL format
+
 #mode :standalone # Default mode
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
 
+# Parallel mode for "parallel"
+#  Defaults to :in_threads
+#parallel :in_processes
+
 # Define hosts as array
 hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
+
+# Configure ssh options for #ssh
+#  With private key auth:
+ssh user: 'someone', keys: ['path/to/identity_file'], passphrase: 'xxx'
+#  With password auth:
+#ssh user: 'someone', password: 'xxx'
+
+# Configure rsync options
+#  Defaults to ['-az', '--delete']
+# Available full Hash options are bellow:
+rsync delete: true, bwlimit: 4096, verbose: false, excludes: [], rsh: nil, dry_run: false
 
 # Define task run on localhost
 local do
   sh :echo, %W(LOCAL: #{src} => #{dst})
-  ssh dst, :mkdir, %W(-p /path/to/dest), user: 'someone'
+  ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync '/path/to/src/', '/path/to/dest/'
 end
 
@@ -17,6 +34,6 @@ end
 remote do
   sh :echo, %W(REMOTE: #{src} => #{dst})
   ssh dst, :mkdir, %W(-p /path/to/dest)
-  rsync_remote '/path/to/src/', '/path/to/dest/', user: 'someone'
+  rsync_remote '/path/to/src/', '/path/to/dest/'
 end
 
