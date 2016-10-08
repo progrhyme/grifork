@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/grifork.svg)](https://badge.fury.io/rb/grifork)
 [![Build Status](https://travis-ci.org/key-amb/grifork.svg?branch=master)](https://travis-ci.org/key-amb/grifork)
 
 # grifork
