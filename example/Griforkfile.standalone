@@ -3,6 +3,10 @@
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
 
+# Parallel mode for "parallel"
+#  Defaults to :in_threads
+#parallel :in_processes
+
 # Define hosts as array
 hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
 

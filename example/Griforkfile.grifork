@@ -3,6 +3,10 @@
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
 
+# Parallel mode for "parallel"
+#  Defaults to :in_threads
+#parallel :in_processes
+
 # Setting to exec grifork on remote
 #  Implies to set mode as :grifork
 grifork do
