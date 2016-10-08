@@ -64,7 +64,7 @@ bundle
 
 ```sh
 edit Griforkfile
-./bin/grifork [--[f]ile path/to/Griforkfile]
+./bin/grifork [--[f]ile path/to/Griforkfile] [-n|--dry-run]
 ```
 
 See [example](example) directory for sample of Griforkfiles.

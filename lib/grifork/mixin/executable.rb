@@ -5,6 +5,9 @@ module Grifork::Executable
   class CommandFailure < StandardError; end
   class SSHCommandFailure < StandardError; end
 
+  # Execute shell command at localhost
+  # @param cmd  [String] command
+  # @param args [Array]  arguments
   def sh(cmd, args = [])
     if config.dry_run?
       logger.info("[Dry-run] #sh | #{cmd} #{args}")
@@ -24,6 +27,11 @@ module Grifork::Executable
     end
   end
 
+  # Execute +ssh+ with command to execute at remote host
+  # @param host [String] hostname
+  # @param cmd  [String] command
+  # @param args [Array]  arguments
+  # @param user [String] login user (optional)
   def ssh(host, cmd, args = [], user: nil)
     command = "#{cmd} #{args.shelljoin}"
     if config.dry_run?

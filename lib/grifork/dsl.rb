@@ -18,6 +18,8 @@ class Grifork::DSL
     @on_remote = on_remote
   end
 
+  # Creates {Grifork::Config} object from holding properties
+  # @return [Grifork::Config]
   def to_config
     Grifork::Config.new(@config)
   end
@@ -30,6 +32,8 @@ class Grifork::DSL
     @config.merge!(other.config)
   end
 
+  # Grifork mode: How it works
+  # @param m [Symbol] +:standalone+ or +:grifork+. Defaults to +:standalone+
   def mode(m)
     unless Grifork::MODES.has_key?(m)
       raise LoadError, "Undefined mode! #{m}"
@@ -37,6 +41,9 @@ class Grifork::DSL
     config_set(:mode, m)
   end
 
+  # Configure grifork settings for +:grifork+ mode
+  # @param &command [Proc]
+  # @see Grifork::Config::Grifork.initialize
   def grifork(&command)
     if @config[:mode] == :standalone
       raise LoadError, "Can't configure grifork in standalone mode"
@@ -45,14 +52,21 @@ class Grifork::DSL
     config_set(:grifork, Grifork::Config::Grifork.new(&command))
   end
 
+  # Branches number for tree of host nodes
   def branches(num)
     config_set(:branches, num)
   end
 
+  # Configure logging
+  # @param args [Hash]
+  # @see Grifork::Config::Log.initialize
   def log(args)
     config_set(:log, Grifork::Config::Log.new(args))
   end
 
+  # Forking method to exec tasks in parallel.
+  # @param how [:Symbol] +:in_threads+ or +:in_processes+. Defaults to +:in_threads+
+  # @see https://github.com/grosser/parallel
   def parallel(how)
     unless %i(in_threads in_processes).include?(how)
       raise LoadError, "Invalid parallel mode! #{how.inspect} / must be :in_threads or :in_processes"
@@ -60,6 +74,8 @@ class Grifork::DSL
     config_set(:parallel, how)
   end
 
+  # Host list as targets of tasks
+  # @param hosts [Array<String>] List of resolvable hostnames
   def hosts(list)
     config_set(:hosts, list)
   end
@@ -77,11 +93,17 @@ class Grifork::DSL
     config_set(:rsync, Grifork::Config::Rsync.new(props))
   end
 
+  # Define tasks to execute at localhost
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Task}
   def local(&task)
     return if @on_remote
     config_set(:local_task, Grifork::Executor::Task.new(:local, &task))
   end
 
+  # Define tasks to execute at remote host
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Task}
+  # @note In +:standalone+ mode, the task is executed at localhost actually.
+  #  In +:grifork+ mode, it is executed at remote hosts via +grifork+ command on remote hosts
   def remote(&task)
     if @on_remote
       config_set(:local_task, Grifork::Executor::Task.new(:local, &task))
