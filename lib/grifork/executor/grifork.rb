@@ -7,10 +7,10 @@ class Grifork::Executor::Grifork
   # 2. Login remote host by +ssh+ and execute +grifork+ command
   def run(node)
     c = config.grifork
-    ssh node.host, %(test -d "#{c.workdir}" || mkdir -p "#{c.workdir}"), user: c.login
+    ssh node.host, %(test -d "#{c.workdir}" || mkdir -p "#{c.workdir}")
     rsync(node.host, config.griforkfile, "#{c.workdir}/Griforkfile")
     prepare_grifork_hosts_file_on_remote(node)
-    ssh node.host, %(cd #{c.dir} && #{c.cmd} --file #{c.workdir}/Griforkfile --override-by #{c.workdir}/Griforkfile.hosts --on-remote), [], user: c.login
+    ssh node.host, %(cd #{c.dir} && #{c.cmd} --file #{c.workdir}/Griforkfile --override-by #{c.workdir}/Griforkfile.hosts --on-remote)
   end
 
   private

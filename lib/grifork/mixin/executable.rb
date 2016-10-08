@@ -31,18 +31,15 @@ module Grifork::Executable
   # @param host [String] hostname
   # @param cmd  [String] command
   # @param args [Array]  arguments
-  # @param user [String] login user (optional)
-  def ssh(host, cmd, args = [], user: nil)
+  def ssh(host, cmd, args = [])
     command = "#{cmd} #{args.shelljoin}"
     if config.dry_run?
-      logger.info("[Dry-run] #ssh #{user}@#{host} | #{cmd} #{args}")
+      logger.info("[Dry-run] #ssh @#{host} #{config.ssh.options} | #{cmd} #{args}")
       return
     else
-      logger.info("#ssh #{user}@#{host} | #{cmd} #{args}")
+      logger.info("#ssh @#{host} #{config.ssh.options} | #{cmd} #{args}")
     end
-    ssh_args = [host]
-    ssh_args << user if user
-    Net::SSH.start(*ssh_args) do |ssh|
+    Net::SSH.start(host, nil, config.ssh.options) do |ssh|
       channel = ssh.open_channel do |ch|
         ch.exec(command) do |ch, success|
           unless success
@@ -80,9 +77,8 @@ module Grifork::Executable
   # @param from [String] Path to source file or directory
   # @param to   [String] Path to destination at remote host.
   #  If you omit this param, it will be the same with +from+ param
-  # @param user [String] see {#ssh}
-  def rsync_remote(src, dst, from, to = nil, user: nil)
+  def rsync_remote(src, dst, from, to = nil)
     to ||= from
-    ssh src, :rsync, [*config.rsync.options, from, "#{dst}:#{to}"], user: user
+    ssh src, :rsync, [*config.rsync.options, from, "#{dst}:#{to}"]
   end
 end

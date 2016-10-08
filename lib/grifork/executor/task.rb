@@ -27,7 +27,7 @@ class Grifork::Executor::Task
 
   # Wrapper for {Grifork::Executable#rsync_remote}
   # @note This is for +remote+ task on +:standalone+ mode
-  def rsync_remote(from, to = nil, user: nil)
-    super(src, dst, from, to, user: user)
+  def rsync_remote(from, to = nil)
+    super(src, dst, from, to)
   end
 end
