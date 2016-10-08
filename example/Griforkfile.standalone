@@ -1,4 +1,6 @@
-# Configuration
+# Example of Grifork DSL for :standalone mode
+# See Grifork::DSL for more informaion about DSL format
+
 #mode :standalone # Default mode
 branches 4
 log file: 'tmp/grifork.log', level: 'debug'
@@ -9,6 +11,11 @@ log file: 'tmp/grifork.log', level: 'debug'
 
 # Define hosts as array
 hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
+
+# Configure rsync options
+#  Defaults to ['-az', '--delete']
+# Available full Hash options are bellow:
+rsync delete: true, bwlimit: 4096, verbose: false, exclude: nil
 
 # Define task run on localhost
 local do
