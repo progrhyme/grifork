@@ -31,8 +31,8 @@ class Grifork::Config
   def rsync_opts
     @rsync ||= Rsync.new
     opts = @rsync.options
-    if opts.grep(/^(-e|--rsh)[= ]\S+/).size.zero?
-      opts << %(--rsh="#{ssh.command_for_rsync}")
+    if opts.grep(/^(-e|--rsh)$/).size.zero?
+      opts.concat(['--rsh', ssh.command_for_rsync])
     end
     opts
   end
@@ -86,7 +86,7 @@ class Grifork::Config
         opts << ( @verbose ? '-avz' : '-az' )
         opts << '--dry-run'             if @dry_run
         opts << '--delete'              if @delete
-        opts << %(--rsh="#{@rsh}")      if @rsh
+        opts.concat(['--rsh', @rsh])    if @rsh
         opts << "--bwlimit=#{@bwlimit}" if @bwlimit
         if @excludes.size > 0
           @excludes.each { |ex| opts << "--exclude=#{ex}" }
