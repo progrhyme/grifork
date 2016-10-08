@@ -21,7 +21,7 @@ ssh user: 'someone', keys: ['path/to/identity_file'], passphrase: 'xxx'
 # Configure rsync options
 #  Defaults to ['-az', '--delete']
 # Available full Hash options are bellow:
-rsync delete: true, bwlimit: 4096, verbose: false, exclude: nil
+rsync delete: true, bwlimit: 4096, verbose: false, excludes: [], rsh: nil, dry_run: false
 
 # Define task run on localhost
 local do

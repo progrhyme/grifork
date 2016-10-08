@@ -30,7 +30,7 @@ hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
 # Configure rsync options
 #  Defaults to ['-az', '--delete']
 # Available full Hash options are bellow:
-rsync delete: true, bwlimit: 4096, verbose: false, exclude: nil
+rsync delete: true, bwlimit: 4096, verbose: false, excludes: [], rsh: nil, dry_run: false
 
 # Define task run on localhost
 local do
