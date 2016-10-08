@@ -61,14 +61,4 @@ module Grifork::Executable
       channel.wait
     end
   end
-
-  def rsync(from, to = nil)
-    to ||= from
-    sh :rsync, [*config.rsync.options, from, "#{dst}:#{to}"]
-  end
-
-  def rsync_remote(from, to = nil, user: nil)
-    to ||= from
-    ssh src, :rsync, [*config.rsync.options, from, "#{dst}:#{to}"], user: user
-  end
 end
