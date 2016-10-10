@@ -1,4 +1,4 @@
-class Grifork::Executor::Task
+class Grifork::Executor::Carrier
   include Grifork::Executable
 
   # Initialize with task
