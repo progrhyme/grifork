@@ -1,6 +1,10 @@
 class Grifork::Config
-  attr_reader   :branches, :hosts, :log, :local_task, :remote_task, :grifork
-  attr_accessor :griforkfile, :dry_run
+  attrs = {
+    ro: %i(branches hosts log grifork prepare_task local_task remote_task finish_task),
+    rw: %i(griforkfile dry_run),
+  }
+  attr_reader   *attrs[:ro]
+  attr_accessor *attrs[:rw]
 
   def initialize(args)
     args.each do |key, val|
