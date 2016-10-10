@@ -1,3 +1,12 @@
+## 0.5.0 (2016/10/10)
+
+Features: (#4)
+
+- New DSL methods:
+  - `#prepare`, `#finish`: Initialize or teardown the whole build procedure
+  - `#prepare_remote`, `#finish_remote`: Initialize or teardown the procedure on
+    remote hosts in `:grifork` mode
+
 ## 0.4.0 (2016/10/9)
 
 Bug Fix: (#3)
