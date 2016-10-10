@@ -26,8 +26,10 @@ describe Grifork::DSL do
           parallel :in_processes
           log file: 'path/to/grifork.log'
           hosts ['web1', '192.168.1.1']
+          prepare { p :prepare }
           local { p :local }
           remote { p :remote }
+          finish { p :finish }
         EODSL
       end
 
@@ -40,8 +42,10 @@ describe Grifork::DSL do
         expect(config[:parallel]).to eq :in_processes
         expect(config[:log]).to be_an_instance_of(Grifork::Config::Log)
         expect(config[:hosts].size).to eq 2
+        expect(config[:prepare_task]).to be_truthy
         expect(config[:local_task]).to be_truthy
         expect(config[:remote_task]).to be_truthy
+        expect(config[:finish_task]).to be_truthy
       end
 
       context 'With on_remote: true argument' do
@@ -59,6 +63,37 @@ describe Grifork::DSL do
           expect(config[:remote_task]).to be nil
           ret = config[:local_task].run(:a, :b)
           expect(ret).to be :remote
+        end
+
+        context 'With no #prepare_remote nor #finish_remote' do
+          it 'prepare/finish tasks are undefined' do
+            dsl = subject
+            config = dsl.instance_variable_get('@config')
+            expect(config[:prepare_task]).to be_falsey
+            expect(config[:finish_task]).to be_falsey
+          end
+        end
+
+        context 'With #prepare_remote and #finish_remote' do
+          let(:content) do
+            <<-EODSL
+              branches 2
+              parallel :in_processes
+              log file: 'path/to/grifork.log'
+              hosts ['web1', '192.168.1.1']
+              local { p :local }
+              prepare_remote { p :prepare_remote }
+              remote { p :remote }
+              finish_remote { p :finish_remote }
+            EODSL
+          end
+
+          it 'prepare/finish tasks are defined' do
+            dsl = subject
+            config = dsl.instance_variable_get('@config')
+            expect(config[:prepare_task]).to be_truthy
+            expect(config[:finish_task]).to be_truthy
+          end
         end
       end
     end

@@ -149,6 +149,24 @@ class Grifork::DSL
     config_set(:finish_task, Grifork::Executor::Local.new(:finish, &task))
   end
 
+  # Define tasks to execute at remote host which execute +grifork+ tasks in +:grifork+
+  # mode before starting its procedure
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
+  # @note In +:standalone+ mode, this is never executed
+  def prepare_remote(&task)
+    return unless @on_remote
+    config_set(:prepare_task, Grifork::Executor::Local.new(:prepare, &task))
+  end
+
+  # Define tasks to execute at remote host which execute +grifork+ tasks in +:grifork+
+  # mode in the end of its procedure
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
+  # @note In +:standalone+ mode, this is never executed
+  def finish_remote(&task)
+    return unless @on_remote
+    config_set(:finish_task, Grifork::Executor::Local.new(:finish, &task))
+  end
+
   private
 
   def config_set(key, value)
