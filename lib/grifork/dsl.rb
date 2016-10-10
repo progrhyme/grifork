@@ -113,14 +113,6 @@ class Grifork::DSL
     config_set(:rsync, Grifork::Config::Rsync.new(props))
   end
 
-  # Define tasks to execute at localhost before starting procedure
-  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Carrier}
-  # @note In +:grifork+ mode, this is executed only at localhost
-  def prepare(&task)
-    return if @on_remote
-    config_set(:prepare_task, Grifork::Executor::Carrier.new(:prepare, &task))
-  end
-
   # Define tasks to execute at localhost
   # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Carrier}
   # @note In +:grifork+ mode, this is executed only at localhost
@@ -141,12 +133,20 @@ class Grifork::DSL
     end
   end
 
+  # Define tasks to execute at localhost before starting procedure
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
+  # @note In +:grifork+ mode, this is executed only at localhost
+  def prepare(&task)
+    return if @on_remote
+    config_set(:prepare_task, Grifork::Executor::Local.new(:prepare, &task))
+  end
+
   # Define tasks to execute at localhost in the end of procedure
-  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Carrier}
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
   # @note In +:grifork+ mode, this is executed only at localhost
   def finish(&task)
     return if @on_remote
-    config_set(:finish_task, Grifork::Executor::Carrier.new(:finish, &task))
+    config_set(:finish_task, Grifork::Executor::Local.new(:finish, &task))
   end
 
   private

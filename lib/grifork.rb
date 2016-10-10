@@ -18,6 +18,7 @@ class Grifork
   require_relative 'grifork/mixin/executable'
   require_relative 'grifork/executor/grifork'
   require_relative 'grifork/executor/carrier'
+  require_relative 'grifork/executor/local'
   require_relative 'grifork/dsl'
   require_relative 'grifork/cli'
   require_relative 'grifork/version'

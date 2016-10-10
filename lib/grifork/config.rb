@@ -1,6 +1,6 @@
 class Grifork::Config
   attrs = {
-    ro: %i(branches hosts log grifork prepare_task local_task remote_task finish_task),
+    ro: %i(branches hosts log grifork local_task remote_task prepare_task finish_task),
     rw: %i(griforkfile dry_run),
   }
   attr_reader   *attrs[:ro]
