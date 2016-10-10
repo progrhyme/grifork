@@ -23,6 +23,7 @@ describe Grifork::DSL do
       let(:content) do
         <<-EODSL
           branches 2
+          parallel :in_processes
           log file: 'path/to/grifork.log'
           hosts ['web1', '192.168.1.1']
           local { p :local }
@@ -36,6 +37,7 @@ describe Grifork::DSL do
         expect(dsl).to be_an_instance_of(Grifork::DSL)
         config = dsl.instance_variable_get('@config')
         expect(config[:branches]).to eq 2
+        expect(config[:parallel]).to eq :in_processes
         expect(config[:log]).to be_an_instance_of(Grifork::Config::Log)
         expect(config[:hosts].size).to eq 2
         expect(config[:local_task]).to be_truthy
@@ -51,6 +53,7 @@ describe Grifork::DSL do
           expect(dsl).to be_an_instance_of(Grifork::DSL)
           config = dsl.instance_variable_get('@config')
           expect(config[:branches]).to eq 2
+          expect(config[:parallel]).to eq :in_processes
           expect(config[:log]).to be_an_instance_of(Grifork::Config::Log)
           expect(config[:hosts].size).to eq 2
           expect(config[:remote_task]).to be nil
