@@ -23,6 +23,12 @@ ssh user: 'someone', keys: ['path/to/identity_file'], passphrase: 'xxx'
 # Available full Hash options are bellow:
 rsync delete: true, bwlimit: 4096, verbose: false, excludes: [], rsh: nil, dry_run: false
 
+# Prepare before running tasks
+prepare do
+  sh :echo, ['Prepare standalone mode.']
+  sh :mkdir, %w(-p path/to/tmp)
+end
+
 # Define task run on localhost
 local do
   sh :echo, %W(LOCAL: #{src} => #{dst})
@@ -35,5 +41,11 @@ remote do
   sh :echo, %W(REMOTE: #{src} => #{dst})
   ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync_remote '/path/to/src/', '/path/to/dest/'
+end
+
+# Closing tasks
+finish do
+  sh :echo, ['Finish standalone mode.']
+  sh :rm, %w(-rf path/to/tmp)
 end
 

@@ -32,11 +32,23 @@ hosts ['web1.internal', 'web2.internal', '192.168.10.1', '192.168.10.2']
 # Available full Hash options are bellow:
 rsync delete: true, bwlimit: 4096, verbose: false, excludes: [], rsh: nil, dry_run: false
 
+# Prepare before running tasks on localhost
+prepare do
+  sh :echo, ['Prepare grifork mode.']
+  sh :mkdir, %w(-p path/to/tmp)
+end
+
 # Define task run on localhost
 local do
   sh :echo, %W(LOCAL: #{src} => #{dst})
   ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync '/path/to/src/', '/path/to/dest/'
+end
+
+# Prepare in the beginning of grifork tasks on remote
+prepare_remote do
+  sh :echo, ['Prepare grifork on remote.']
+  sh %(cd path/to/app && bundle install)
 end
 
 # Define task run on remote hosts
@@ -46,5 +58,17 @@ remote do
   sh :echo, %W(REMOTE: #{src} => #{dst})
   ssh dst, :mkdir, %W(-p /path/to/dest)
   rsync '/path/to/src/', '/path/to/dest/'
+end
+
+# Closing tasks on remote
+finish_remote do
+  sh :echo, ['Finish grifork on remote.']
+  sh %(cd path/to/app && bundle clean)
+end
+
+# Closing tasks finally on localhost
+finish do
+  sh :echo, ['Finish grifork mode.']
+  sh :rm, %w(-rf path/to/tmp)
 end
 

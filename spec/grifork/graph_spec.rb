@@ -18,10 +18,10 @@ describe Grifork::Graph do
     $launch_tasks_log = Pathname.new('tmp/graph_launch_tasks_spec.log')
     let(:config) do
       hosts      = 1.upto(10).map { |i| "host#{i}" }
-      local_task = Grifork::Executor::Task.new(:local) do
+      local_task = Grifork::Executor::Carrier.new(:local) do
         sh "echo LOCAL #{src}:#{dst} >> #{$launch_tasks_log}", []
       end
-      remote_task = Grifork::Executor::Task.new(:remote) do
+      remote_task = Grifork::Executor::Carrier.new(:remote) do
         sh "echo REMOTE #{src}:#{dst} >> #{$launch_tasks_log}", []
       end
       Grifork::Config.new(

@@ -29,6 +29,8 @@ class Grifork::Graph
 
   # Launch local and remote tasks through whole graph
   def launch_tasks
+    config.prepare_task.run if config.prepare_task
+
     # level = 1
     Parallel.map(root.children, config.parallel => root.children.size) do |node|
       logger.info("Run locally. localhost => #{node.host}")
@@ -36,10 +38,14 @@ class Grifork::Graph
     end
     # level in (2..depth)
     fork_remote_tasks(root.children)
+
+    config.finish_task.run if config.finish_task
   end
 
   # Run grifork command on child nodes recursively
   def grifork
+    config.prepare_task.run if config.prepare_task
+
     if root.children.size.zero?
       logger.debug("#{root} Reached leaf. Nothing to do.")
       return
@@ -53,6 +59,8 @@ class Grifork::Graph
       end
       Grifork::Executor::Grifork.new.run(child)
     end
+
+    config.finish_task.run if config.finish_task
   end
 
   # Print graph structure for debug usage

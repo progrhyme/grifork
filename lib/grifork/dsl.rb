@@ -114,22 +114,57 @@ class Grifork::DSL
   end
 
   # Define tasks to execute at localhost
-  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Task}
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Carrier}
+  # @note In +:grifork+ mode, this is executed only at localhost
   def local(&task)
     return if @on_remote
-    config_set(:local_task, Grifork::Executor::Task.new(:local, &task))
+    config_set(:local_task, Grifork::Executor::Carrier.new(:local, &task))
   end
 
   # Define tasks to execute at remote host
-  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Task}
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Carrier}
   # @note In +:standalone+ mode, the task is executed at localhost actually.
   #  In +:grifork+ mode, it is executed at remote hosts via +grifork+ command on remote hosts
   def remote(&task)
     if @on_remote
-      config_set(:local_task, Grifork::Executor::Task.new(:local, &task))
+      config_set(:local_task, Grifork::Executor::Carrier.new(:local, &task))
     else
-      config_set(:remote_task, Grifork::Executor::Task.new(:remote, &task))
+      config_set(:remote_task, Grifork::Executor::Carrier.new(:remote, &task))
     end
+  end
+
+  # Define tasks to execute at localhost before starting procedure
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
+  # @note In +:grifork+ mode, this is executed only at localhost
+  def prepare(&task)
+    return if @on_remote
+    config_set(:prepare_task, Grifork::Executor::Local.new(:prepare, &task))
+  end
+
+  # Define tasks to execute at localhost in the end of procedure
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
+  # @note In +:grifork+ mode, this is executed only at localhost
+  def finish(&task)
+    return if @on_remote
+    config_set(:finish_task, Grifork::Executor::Local.new(:finish, &task))
+  end
+
+  # Define tasks to execute at remote host which execute +grifork+ tasks in +:grifork+
+  # mode before starting its procedure
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
+  # @note In +:standalone+ mode, this is never executed
+  def prepare_remote(&task)
+    return unless @on_remote
+    config_set(:prepare_task, Grifork::Executor::Local.new(:prepare, &task))
+  end
+
+  # Define tasks to execute at remote host which execute +grifork+ tasks in +:grifork+
+  # mode in the end of its procedure
+  # @param &task [Proc] Codes to be executed by an object of {Grifork::Executor::Local}
+  # @note In +:standalone+ mode, this is never executed
+  def finish_remote(&task)
+    return unless @on_remote
+    config_set(:finish_task, Grifork::Executor::Local.new(:finish, &task))
   end
 
   private
